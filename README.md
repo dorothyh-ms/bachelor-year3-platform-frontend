@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # battleship-frontend
+=======
+# platform-frontend
+>>>>>>> c527d78c1fd822976d3daf43168bfcd9010d4294
 
 
 
@@ -15,14 +19,22 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
+<<<<<<< HEAD
 git remote add origin https://gitlab.com/kdg-ti/integration-5/2024-2025/team2/battleship-frontend.git
+=======
+git remote add origin https://gitlab.com/kdg-ti/integration-5/2024-2025/team2/platform-frontend.git
+>>>>>>> c527d78c1fd822976d3daf43168bfcd9010d4294
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
+<<<<<<< HEAD
 - [ ] [Set up project integrations](https://gitlab.com/kdg-ti/integration-5/2024-2025/team2/battleship-frontend/-/settings/integrations)
+=======
+- [ ] [Set up project integrations](https://gitlab.com/kdg-ti/integration-5/2024-2025/team2/platform-frontend/-/settings/integrations)
+>>>>>>> c527d78c1fd822976d3daf43168bfcd9010d4294
 
 ## Collaborate with your team
 
