@@ -1,35 +1,95 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, CssBaseline } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import GamesIcon from '@mui/icons-material/Games';
+import LeaderboardIcon from '@mui/icons-material/Leaderboard';
+import StoreIcon from '@mui/icons-material/Store';
+import FriendsIcon from '@mui/icons-material/Group';
+import MailIcon from '@mui/icons-material/Mail'; // For Game Invitations
+import Home from './pages/Home';
+import Games from './pages/Games';
+import Leaderboard from './pages/Leaderboard';
+import Store from './pages/Store';
+import Friends from './pages/Friends';
+import GameInvitations from './pages/GameInvitations'; // Import new page
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const drawerWidth = 240;
 
-export default App
+const App: React.FC = () => {
+    return (
+        <Router>
+            <CssBaseline />
+            <Box sx={{ display: 'flex' }}>
+                {/* Sidebar */}
+                <Drawer
+                    sx={{
+                        width: drawerWidth,
+                        flexShrink: 0,
+                        '& .MuiDrawer-paper': {
+                            width: drawerWidth,
+                            boxSizing: 'border-box',
+                            backgroundColor: '#1E1E2F',
+                            color: '#ffffff',
+                        },
+                    }}
+                    variant="permanent"
+                    anchor="left"
+                >
+                    <Toolbar />
+                    <List>
+                        <ListItem button component={Link} to="/">
+                            <ListItemIcon><HomeIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Home" />
+                        </ListItem>
+                        <ListItem button component={Link} to="/games">
+                            <ListItemIcon><GamesIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Games" />
+                        </ListItem>
+                        <ListItem button component={Link} to="/leaderboard">
+                            <ListItemIcon><LeaderboardIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Leaderboard" />
+                        </ListItem>
+                        <ListItem button component={Link} to="/store">
+                            <ListItemIcon><StoreIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Store" />
+                        </ListItem>
+                        <ListItem button component={Link} to="/friends">
+                            <ListItemIcon><FriendsIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Friends" />
+                        </ListItem>
+                        <ListItem button component={Link} to="/game-invitations">
+                            <ListItemIcon><MailIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Game Invitations" />
+                        </ListItem>
+                    </List>
+                </Drawer>
+
+                {/* Main Content */}
+                <Box
+                    component="main"
+                    sx={{
+                        flexGrow: 1,
+                        p: 3,
+                        backgroundColor: '#2A2A40',
+                        minHeight: '100vh',
+                    }}
+                >
+                    <Toolbar />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/games" element={<Games />} />
+                        <Route path="/leaderboard" element={<Leaderboard />} />
+                        <Route path="/store" element={<Store />} />
+                        <Route path="/friends" element={<Friends />} />
+                        <Route path="/game-invitations" element={<GameInvitations />} />
+                    </Routes>
+                </Box>
+            </Box>
+        </Router>
+    );
+};
+
+export default App;
