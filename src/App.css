@@ -37,3 +37,23 @@ a {
 a:hover {
   color: #388E3C; /* Darker green on hover for links */
 }
+
+/* src/App.css */
+.card {
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+button {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+

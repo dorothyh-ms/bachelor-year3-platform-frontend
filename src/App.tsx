@@ -6,15 +6,13 @@ import GamesIcon from '@mui/icons-material/Games';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import StoreIcon from '@mui/icons-material/Store';
 import FriendsIcon from '@mui/icons-material/Group';
-import MailIcon from '@mui/icons-material/Mail'; // For Game Invitations
+import PeopleIcon from '@mui/icons-material/People'; // Lobby Icon
 import Home from './pages/Home';
 import Games from './pages/Games';
 import Leaderboard from './pages/Leaderboard';
 import Store from './pages/Store';
 import Friends from './pages/Friends';
-import GameInvitations from './pages/GameInvitations'; // Import new page
-import './App.css';
-
+import Lobby from './pages/Lobby'; // Lobby Component
 
 const drawerWidth = 240;
 
@@ -23,7 +21,6 @@ const App: React.FC = () => {
         <Router>
             <CssBaseline />
             <Box sx={{ display: 'flex' }}>
-                {/* Sidebar */}
                 <Drawer
                     sx={{
                         width: drawerWidth,
@@ -60,9 +57,9 @@ const App: React.FC = () => {
                             <ListItemIcon><FriendsIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
                             <ListItemText primary="Friends" />
                         </ListItem>
-                        <ListItem button component={Link} to="/game-invitations">
-                            <ListItemIcon><MailIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
-                            <ListItemText primary="Game Invitations" />
+                        <ListItem button component={Link} to="/lobby">
+                            <ListItemIcon><PeopleIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                            <ListItemText primary="Lobby" />
                         </ListItem>
                     </List>
                 </Drawer>
@@ -84,7 +81,7 @@ const App: React.FC = () => {
                         <Route path="/leaderboard" element={<Leaderboard />} />
                         <Route path="/store" element={<Store />} />
                         <Route path="/friends" element={<Friends />} />
-                        <Route path="/game-invitations" element={<GameInvitations />} />
+                        <Route path="/lobby" element={<Lobby />} />
                     </Routes>
                 </Box>
             </Box>
