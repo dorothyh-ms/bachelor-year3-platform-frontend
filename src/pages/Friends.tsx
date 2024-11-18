@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import FriendSearch from './FriendSearch';
-import FriendList from './FriendList';
+import FriendSearch from '../components/FriendSearch';
+import FriendList from '../components/FriendList';
 import { Container, Typography } from '@mui/material';
 
 const Friends: React.FC = () => {
