@@ -1,23 +1,17 @@
-import React, { useContext } from 'react';
-import { SecurityContext } from '../context/SecurityContext';
-import { Button } from '@mui/material';
+import { createContext } from 'react';
 
-const Header: React.FC = () => {
-    const { isAuthenticated, login, logout } = useContext(SecurityContext);
+export interface ISecurityContext {
+    isAuthenticated: () => boolean;
+    loggedInUser: string | undefined;
+    login: () => void;
+    logout: () => void;
+}
 
-    return (
-        <header style={{ padding: '1rem', textAlign: 'right' }}>
-            {isAuthenticated ? (
-                <Button variant="contained" color="secondary" onClick={logout}>
-                    Logout
-                </Button>
-            ) : (
-                <Button variant="contained" color="primary" onClick={login}>
-                    Login
-                </Button>
-            )}
-        </header>
-    );
-};
+const SecurityContext = createContext<ISecurityContext>({
+    isAuthenticated: () => false,
+    loggedInUser: undefined,
+    login: () => {},
+    logout: () => {},
+});
 
-export default Header;
+export default SecurityContext;
