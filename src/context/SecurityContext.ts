@@ -1,17 +1,33 @@
-import { createContext } from 'react';
+// import { createContext } from 'react';
+//
+// export interface ISecurityContext {
+//     isAuthenticated: boolean;
+//     login: () => void;
+//     logout: () => void;
+// }
+//
+// export const SecurityContext = createContext<ISecurityContext>({
+//     isAuthenticated: false,
+//     login: () => {},
+//     logout: () => {},
+// });
+
+import {createContext} from 'react'
 
 export interface ISecurityContext {
-    isAuthenticated: () => boolean;
-    loggedInUser: string | undefined;
-    login: () => void;
-    logout: () => void;
+    isAuthenticated: () => boolean
+    loggedInUser: string | undefined
+    login: () => void
+    logout: () => void
 }
 
-const SecurityContext = createContext<ISecurityContext>({
+export default createContext<ISecurityContext>({
     isAuthenticated: () => false,
     loggedInUser: undefined,
-    login: () => {},
-    logout: () => {},
-});
+    login: () => {
+    },
+    logout: () => {
+    },
+})
 
-export default SecurityContext;
+

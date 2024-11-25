@@ -1,36 +1,119 @@
-import React from 'react';
-import { Box, Typography, Button, Card, CardContent } from '@mui/material';
+import React, { useState } from 'react';
+import {
+    Box,
+    Typography,
+    Button,
+    Card,
+    CardContent,
+    TextField,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    CircularProgress,
+} from '@mui/material';
+import { useFetchLobbies } from '../hooks/useFetchLobbies';
+import { useCreateLobby } from '../hooks/useCreateLobby';
 
-const mockLobbies = [
-    { id: 1, name: 'Lobby #1', players: 2, status: 'Waiting' },
-    { id: 2, name: 'Lobby #2', players: 1, status: 'Waiting' },
-];
+interface Lobby {
+    id: string;
+    gameDto: {
+        name: string;
+    };
+    lobbyStatus: string;
+}
 
 const Lobby: React.FC = () => {
+    const { data: lobbies, isLoading, isError } = useFetchLobbies();
+    const createLobby = useCreateLobby();
+
+    const [openDialog, setOpenDialog] = useState(false);
+    const [gameId, setGameId] = useState('');
+
+    const handleCreateLobby = () => {
+        if (!gameId.trim()) {
+            alert('Please provide a valid Game ID');
+            return;
+        }
+
+        createLobby.mutate(gameId, {
+            onSuccess: () => {
+                alert('Lobby created successfully!');
+                setGameId('');
+                setOpenDialog(false);
+            },
+            onError: (error) => {
+                console.error('Error creating lobby:', error);
+                alert('Failed to create lobby. Please try again.');
+            },
+        });
+    };
+
     return (
-        <Box>
+        <Box sx={{ padding: 3 }}>
             <Typography variant="h4" gutterBottom>
                 Game Lobbies
             </Typography>
-            {mockLobbies.map(lobby => (
-                <Card
-                    key={lobby.id}
-                    sx={{
-                        margin: '1rem 0',
-                        backgroundColor: 'background.paper',
-                        color: 'text.primary',
-                    }}
-                >
-                    <CardContent>
-                        <Typography variant="h6">{lobby.name}</Typography>
-                        <Typography>Players: {lobby.players}</Typography>
-                        <Typography>Status: {lobby.status}</Typography>
-                        <Button variant="contained" color="secondary" sx={{ mt: 1 }}>
-                            Join Lobby
-                        </Button>
-                    </CardContent>
-                </Card>
-            ))}
+
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenDialog(true)}
+                sx={{ marginBottom: 2 }}
+            >
+                Create Lobby
+            </Button>
+
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                aria-labelledby="create-lobby-title"
+                aria-describedby="create-lobby-description"
+            >
+                <DialogTitle id="create-lobby-title">Create New Lobby</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Game ID"
+                        value={gameId}
+                        onChange={(e) => setGameId(e.target.value)}
+                        fullWidth
+                        margin="dense"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDialog(false)} color="secondary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleCreateLobby} color="primary">
+                        Create
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {isLoading && (
+                <Box display="flex" alignItems="center" justifyContent="center">
+                    <CircularProgress />
+                    <Typography sx={{ marginLeft: 2 }}>Loading lobbies...</Typography>
+                </Box>
+            )}
+            {isError && <Typography color="error">Failed to load lobbies.</Typography>}
+            {!isLoading && !isError && (
+                <Box>
+                    {lobbies?.length ? (
+                        lobbies.map((lobby: Lobby) => (
+                            <Card key={lobby.id} sx={{ marginBottom: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h6">Lobby ID: {lobby.id}</Typography>
+                                    <Typography>Game: {lobby.gameDto.name}</Typography>
+                                    <Typography>Status: {lobby.lobbyStatus}</Typography>
+                                </CardContent>
+                            </Card>
+                        ))
+                    ) : (
+                        <Typography>No active lobbies available.</Typography>
+                    )}
+                </Box>
+            )}
         </Box>
     );
 };

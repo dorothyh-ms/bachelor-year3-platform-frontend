@@ -6,15 +6,18 @@ import GamesIcon from '@mui/icons-material/Games';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import StoreIcon from '@mui/icons-material/Store';
 import FriendsIcon from '@mui/icons-material/Group';
-import MailIcon from '@mui/icons-material/Mail'; // For Game Invitations
+import MailIcon from '@mui/icons-material/Mail';
+import ProfileEdit from './pages/ProfileEdit';
 import Home from './pages/Home';
 import Games from './pages/Games';
 import Leaderboard from './pages/Leaderboard';
 import Store from './pages/Store';
 import Friends from './pages/Friends';
-import GameInvitations from './pages/GameInvitations'; // Import new page
+import GameInvitations from './pages/GameInvitations';
+import Lobby from './pages/Lobby';
+import InvitePlayer from './pages/InvitePlayer';
 import './App.css';
-
+import ProtectedRoute from './utils/ProtectedRoute';
 
 const drawerWidth = 240;
 
@@ -40,29 +43,59 @@ const App: React.FC = () => {
                 >
                     <Toolbar />
                     <List>
-                        <ListItem button component={Link} to="/">
-                            <ListItemIcon><HomeIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                        <ListItem component={Link} to="/" button>
+                            <ListItemIcon>
+                                <HomeIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
                             <ListItemText primary="Home" />
                         </ListItem>
-                        <ListItem button component={Link} to="/games">
-                            <ListItemIcon><GamesIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                        <ListItem component={Link} to="/games" button>
+                            <ListItemIcon>
+                                <GamesIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
                             <ListItemText primary="Games" />
                         </ListItem>
-                        <ListItem button component={Link} to="/leaderboard">
-                            <ListItemIcon><LeaderboardIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                        <ListItem component={Link} to="/leaderboard" button>
+                            <ListItemIcon>
+                                <LeaderboardIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
                             <ListItemText primary="Leaderboard" />
                         </ListItem>
-                        <ListItem button component={Link} to="/store">
-                            <ListItemIcon><StoreIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                        <ListItem component={Link} to="/store" button>
+                            <ListItemIcon>
+                                <StoreIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
                             <ListItemText primary="Store" />
                         </ListItem>
-                        <ListItem button component={Link} to="/friends">
-                            <ListItemIcon><FriendsIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                        <ListItem component={Link} to="/friends" button>
+                            <ListItemIcon>
+                                <FriendsIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
                             <ListItemText primary="Friends" />
                         </ListItem>
-                        <ListItem button component={Link} to="/game-invitations">
-                            <ListItemIcon><MailIcon sx={{ color: '#ffffff' }} /></ListItemIcon>
+                        <ListItem component={Link} to="/game-invitations" button>
+                            <ListItemIcon>
+                                <MailIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
                             <ListItemText primary="Game Invitations" />
+                        </ListItem>
+                        <ListItem component={Link} to="/profile-edit" button>
+                            <ListItemIcon>
+                                <MailIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Edit Profile" />
+                        </ListItem>
+                        <ListItem component={Link} to="/lobbies" button>
+                            <ListItemIcon>
+                                <GamesIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Lobbies" />
+                        </ListItem>
+                        <ListItem component={Link} to="/invite" button>
+                            <ListItemIcon>
+                                <MailIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Invite Player" />
                         </ListItem>
                     </List>
                 </Drawer>
@@ -85,6 +118,23 @@ const App: React.FC = () => {
                         <Route path="/store" element={<Store />} />
                         <Route path="/friends" element={<Friends />} />
                         <Route path="/game-invitations" element={<GameInvitations />} />
+                        <Route path="/profile-edit" element={<ProfileEdit />} />
+                        <Route
+                            path="/lobbies"
+                            element={
+                                <ProtectedRoute>
+                                    <Lobby />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/invite"
+                            element={
+                                <ProtectedRoute>
+                                    <InvitePlayer />
+                                </ProtectedRoute>
+                            }
+                        />
                     </Routes>
                 </Box>
             </Box>
