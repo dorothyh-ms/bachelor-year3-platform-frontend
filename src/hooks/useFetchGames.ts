@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import {Game} from '../types/Game.ts'
+import keycloak from "../keycloak.ts";
 
 const fetchGames = async (): Promise<Game[]> => {
     const token= localStorage.getItem('access_token') // Adjust this to where you store the token
-    console.log("token: "+token)
+
+    console.log("local token: "+token)
+
+    console.log("keycloak token: "+keycloak.token)
     if (!token) {
         throw new Error('No access token found');
     }

@@ -21,6 +21,16 @@ import ProtectedRoute from './utils/ProtectedRoute';
 
 const drawerWidth = 240;
 
+const handleLogout = () => {
+    // Define the post_logout_redirect_uri (the URL to which the user will be redirected after logout)
+    const postLogoutRedirectUri = 'http://localhost:5173'; // Your post logout URL
+
+    const logoutUrl = `http://localhost:8180/realms/banditgames/protocol/openid-connect/logout?post_logout_redirect_uri=${encodeURIComponent(postLogoutRedirectUri)}`;
+
+    // Redirect the user to the Keycloak logout endpoint
+    window.location.href = logoutUrl;
+};
+
 const App: React.FC = () => {
     return (
         <Router>
@@ -96,6 +106,13 @@ const App: React.FC = () => {
                                 <MailIcon sx={{ color: '#ffffff' }} />
                             </ListItemIcon>
                             <ListItemText primary="Invite Player" />
+                        </ListItem>
+                        <ListItem button onClick={handleLogout}>
+                            <ListItemIcon>
+                                {/* You can add any icon for logout here, for example, a PowerOffIcon */}
+                                <MailIcon sx={{ color: '#ffffff' }} />
+                            </ListItemIcon>
+                            <ListItemText primary="Logout" />
                         </ListItem>
                     </List>
                 </Drawer>
