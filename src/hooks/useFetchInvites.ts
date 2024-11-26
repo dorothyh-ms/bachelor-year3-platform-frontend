@@ -19,7 +19,6 @@ const fetchInvites = async (): Promise<Invite[]> => {
             },
         });
 
-        console.log("Fetched invites response:", response.data); // Log the response
         return response.data;
     } catch (error) {
         console.error("Error fetching invites:", error); // Log any error
