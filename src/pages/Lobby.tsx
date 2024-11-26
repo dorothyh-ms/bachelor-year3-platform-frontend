@@ -14,14 +14,7 @@ import {
 } from '@mui/material';
 import { useFetchLobbies } from '../hooks/useFetchLobbies';
 import { useCreateLobby } from '../hooks/useCreateLobby';
-
-interface Lobby {
-    id: string;
-    gameDto: {
-        name: string;
-    };
-    lobbyStatus: string;
-}
+import { Lobby as LobbyType } from '../types/Lobby'; // Import the Lobby definition from types
 
 const Lobby: React.FC = () => {
     const { data: lobbies, isLoading, isError } = useFetchLobbies();
@@ -100,7 +93,7 @@ const Lobby: React.FC = () => {
             {!isLoading && !isError && (
                 <Box>
                     {lobbies?.length ? (
-                        lobbies.map((lobby: Lobby) => (
+                        lobbies.map((lobby: LobbyType) => ( // Use the LobbyType here
                             <Card key={lobby.id} sx={{ marginBottom: 2 }}>
                                 <CardContent>
                                     <Typography variant="h6">Lobby ID: {lobby.id}</Typography>
