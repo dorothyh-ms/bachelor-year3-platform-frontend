@@ -16,11 +16,13 @@ import {
 import { useFetchLobbies } from '../hooks/useFetchLobbies';
 import { useFetchGames } from '../hooks/useFetchGames';
 import { useCreateLobby } from '../hooks/useCreateLobby';
+import { useJoinLobby } from '../hooks/useJoinLobby'; // Import the hook for joining lobbies
 
 const Lobby: React.FC = () => {
     const { data: lobbies, isLoading: isLoadingLobbies, isError: isErrorLobbies } = useFetchLobbies();
     const { data: games, isLoading: isLoadingGames, isError: isErrorGames } = useFetchGames();
     const createLobby = useCreateLobby();
+    const joinLobby = useJoinLobby(); // Initialize the join lobby hook
 
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedGame, setSelectedGame] = useState<{ id: string; name: string } | null>(null);
@@ -40,6 +42,27 @@ const Lobby: React.FC = () => {
             onError: (error) => {
                 console.error('Error creating lobby:', error);
                 alert('Failed to create lobby.');
+            },
+        });
+    };
+
+    const handleJoinLobby = (lobbyId: string) => {
+        if (!lobbyId) {
+            alert('Invalid lobby ID.');
+            return;
+        }
+
+        joinLobby.mutate(lobbyId, {
+            onSuccess: () => {
+                alert('Successfully joined the lobby!');
+            },
+            onError: (error) => {
+                console.error('Error joining lobby:', error.response || error.message || error);
+                if (error.response?.status === 403) {
+                    alert('You do not have permission to join this lobby. Please check your roles or permissions.');
+                } else {
+                    alert('Failed to join the lobby.');
+                }
             },
         });
     };
@@ -105,6 +128,14 @@ const Lobby: React.FC = () => {
                                     <Typography variant="h6">Lobby ID: {lobby.id}</Typography>
                                     <Typography>Game: {lobby.gameDto.name}</Typography>
                                     <Typography>Status: {lobby.lobbyStatus}</Typography>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => handleJoinLobby(lobby.id)}
+                                        sx={{ marginTop: 1 }}
+                                    >
+                                        Join
+                                    </Button>
                                 </CardContent>
                             </Card>
                         ))
