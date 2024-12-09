@@ -3,17 +3,7 @@ import axios from 'axios';
 
 // Function to join a lobby
 const joinLobby = async (lobbyId: string): Promise<any> => {
-    const token = localStorage.getItem('access_token'); // Fetch token from local storage
-    const response = await axios.patch(
-        `http://localhost:8091/api/lobbies/${lobbyId}`,
-        {},
-        {
-            headers: {
-                Authorization: `Bearer ${token}`, // Add token to headers
-                'Content-Type': 'application/json',
-            },
-        }
-    );
+    const response = await axios.patch(`http://localhost:8091/api/lobbies/${lobbyId}`);
     return response.data;
 };
 

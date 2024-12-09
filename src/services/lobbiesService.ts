@@ -6,7 +6,7 @@ export const fetchLobbies = async () => {
 };
 
 export const createLobby = async (gameId: string) => {
-    const response = await axios.post(`/games/${gameId}/lobbies`);
+    const response = await axios.post('/lobbies', { gameId });
     return response.data;
 };
 
