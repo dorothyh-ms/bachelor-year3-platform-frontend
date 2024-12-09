@@ -27,32 +27,22 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-// Function to fetch players
-const fetchPlayers = async (username: string = '') => {
+// Fetch game invitations from the backend
+const fetchInvites = async (): Promise<any[]> => {
     const token = localStorage.getItem('access_token');
-    console.log('Fetching players with token:', token);
-
-    try {
-        const response = await axios.get(`http://localhost:8091/api/players?username=${username}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching players:', error);
-        throw error;
-    }
+    const response = await axios.get('http://localhost:8091/api/invites', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    return response.data;
 };
 
-// React Query Hook for fetching players
-export function useFetchPlayers(username: string = '') {
+// React Query Hook for fetching invites
+export const useFetchInvites = () => {
     return useQuery({
-        queryKey: ['players', username],
-        queryFn: () => fetchPlayers(username),
-        retry: 1,
-        refetchOnWindowFocus: false,
+        queryKey: ['invites'],
+        queryFn: fetchInvites,
     });
-}
+};
