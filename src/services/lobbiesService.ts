@@ -14,3 +14,4 @@ export const joinLobby = async (lobbyId: string) => {
     const response = await axios.patch(`/lobbies/${lobbyId}`);
     return response.data;
 };
+

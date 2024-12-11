@@ -1,5 +1,5 @@
 import React from 'react';
-import FriendCard from './FriendCard';
+import FriendCard from './FriendCard/FriendCard';
 import { Grid } from '@mui/material';
 import { mockFriends } from '../utils/mockData';
 

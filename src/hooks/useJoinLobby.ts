@@ -21,11 +21,16 @@ const joinLobby = async (lobbyId: string): Promise<any> => {
 export function useJoinLobby() {
     const queryClient = useQueryClient();
 
-    return useMutation({
+    const {mutate, isPending, isError} =  useMutation({
         mutationFn: joinLobby,
         onSuccess: () => {
-            // Invalidate the "lobbies" query to refresh the data
             queryClient.invalidateQueries({ queryKey: ['lobbies'] });
         },
     });
+
+    return {
+        isLoading : isPending, 
+        isError, 
+        joinLobby: mutate
+    }
 }

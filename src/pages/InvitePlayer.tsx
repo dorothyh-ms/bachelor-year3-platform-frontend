@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
 import { useFetchLobbies } from '../hooks/useFetchLobbies';
-import { useFetchPlayers } from '../hooks/useFetchPlayers';
+import { useFetchPlayers } from '../hooks/usePlayers';
 import { useInvitePlayer } from '../hooks/useInvitePlayer';
 import { Box, Typography, TextField, Button, CircularProgress, Autocomplete } from '@mui/material';
 
-const InvitePlayer: React.FC = () => {
+const InvitePlayer = () => {
     const { data: lobbies, isLoading: loadingLobbies, isError: errorLobbies } = useFetchLobbies();
     const { data: players, isLoading: loadingPlayers, isError: errorPlayers } = useFetchPlayers('');
     const invitePlayer = useInvitePlayer();
