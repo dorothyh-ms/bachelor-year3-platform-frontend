@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import FriendSearch from '../components/FriendSearch';
 import FriendList from '../components/FriendList';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import PageLayout from '../layouts/PageLayout';
 
 const Friends: React.FC = () => {
     const [query, setQuery] = useState('');
@@ -19,13 +20,14 @@ const Friends: React.FC = () => {
     };
 
     return (
-        <Container>
-            <Typography variant="h4" align="center" gutterBottom>
-                Friends
-            </Typography>
-
+        <PageLayout title="Friends">
             {/* Add Friend Section */}
-            <Box display="flex" justifyContent="center" alignItems="center" my={3} gap={2}>
+            <Box
+                display="flex"
+                alignItems="center"
+                my={3}
+                gap={2}
+            >
                 <TextField
                     label="Friend User ID"
                     variant="outlined"
@@ -42,7 +44,7 @@ const Friends: React.FC = () => {
 
             {/* Existing Friend List Component */}
             <FriendList query={query} />
-        </Container>
+        </PageLayout>
     );
 };
 
