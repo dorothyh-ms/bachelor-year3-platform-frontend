@@ -9,7 +9,7 @@ const GameInvitations = () => {
     const { invites, isLoading, isError } = useFetchInvites();
 
     const renderInvitations = () => {
-        if (isLoading) return <CircularProgress />
+        if (isLoading) return <CircularProgress color='secondary' />
         if (isError) return <Typography color="error">Failed to load invitations.</Typography>
         if (!invites || invites.length < 1){
             return <Typography >You have no pending invitations.</Typography>

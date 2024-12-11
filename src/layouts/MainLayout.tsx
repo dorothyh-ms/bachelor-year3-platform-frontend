@@ -1,18 +1,17 @@
 
-import { Avatar, Box, Drawer, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
+import { Avatar, Box, Button, Drawer, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
 import {  Outlet } from "react-router-dom"
 
 import { ReactNode, useContext } from "react"
-import { HOME } from "../router"
+
 import HomeIcon from '@mui/icons-material/Home';
-import StorefrontIcon from '@mui/icons-material/Storefront';
 import CasinoIcon from '@mui/icons-material/Casino';
 import GroupIcon from '@mui/icons-material/Group';
 import MailIcon from '@mui/icons-material/Mail';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 
 
-import { FRIENDS, GAMES, INVITES, LOBBIES, STORE } from "../constants/routes"
+import { FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE } from "../constants/routes"
 import SecurityContext from "../context/SecurityContext";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +27,7 @@ export interface NavigationLink {
 
 const MainLayout = () => {
     const drawerWidth = 240;
-    const {loggedInUser} = useContext(SecurityContext);
+    const {loggedInUser, login} = useContext(SecurityContext);
 
     const navigate = useNavigate();
 
@@ -123,6 +122,9 @@ const MainLayout = () => {
                         alignItems: "center",
                         gap: 2
                     }}
+                    onClick={() => {
+                        navigate(PROFILE)
+                    }}
                 >
                     <Avatar
                         sx={{ cursor: "pointer", 
@@ -136,7 +138,12 @@ const MainLayout = () => {
                             fontSize: 12,
                         }}
                     >
-                        {loggedInUser}
+                        {loggedInUser ? loggedInUser : <Button 
+                        color="secondary" 
+                        onClick={() => {login()}}
+                        variant='contained'
+                        >Log in
+                        </Button>}
                     </Box>
                 </Box>
                 </Drawer>

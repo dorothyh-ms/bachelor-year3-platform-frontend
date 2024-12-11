@@ -14,7 +14,7 @@ const Games= () => {
             {/* Loading State */}
             {isLoading && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
-                    <CircularProgress />
+                    <CircularProgress color='secondary' />
                 </Box>
             )}
 

@@ -7,17 +7,28 @@ import {
     Paper,
     Stack,
 } from '@mui/material';
+import { useFetchProfile } from '../hooks/useProfile';
 
-const ProfileEdit: React.FC = () => {
-    const [profile, setProfile] = useState({
-        name: 'John Doe',
-        age: 25,
-        location: 'New York',
-    });
+import { DateField } from '@mui/x-date-pickers/DateField';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
+interface ProfileValues {
+        
+}
+
+const ProfilePage = () => {
+    
+    const { profile } = useFetchProfile();
+    const [profileValues, setProfileValues] = useState<ProfileValues>(
+        {...profile, 
+
+        }
+    );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setProfile((prevProfile) => ({
+        setProfileValues((prevProfile) => ({
             ...prevProfile,
             [name]: value,
         }));
@@ -36,7 +47,6 @@ const ProfileEdit: React.FC = () => {
                 p: 4,
                 maxWidth: '500px',
                 margin: '2rem auto',
-                backgroundColor: '#fff',
                 borderRadius: '8px',
             }}
         >
@@ -44,17 +54,17 @@ const ProfileEdit: React.FC = () => {
                 Edit Profile
             </Typography>
             <Stack spacing={2}>
-                <TextField
-                    label="Name"
-                    name="name"
-                    value={profile.name}
-                    onChange={handleChange}
-                    fullWidth
-                />
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateField
+                        label="Controlled field"
+                        value={profile.birthDate}
+                        onChange={handleChange}
+                    />
+                </LocalizationProvider>
                 <TextField
                     label="Age"
                     name="age"
-                    value={profile.age}
+                    value={profileValues.age}
                     onChange={handleChange}
                     type="number"
                     fullWidth
@@ -62,10 +72,10 @@ const ProfileEdit: React.FC = () => {
                 <TextField
                     label="Location"
                     name="location"
-                    value={profile.location}
+                    value={profileValues.location}
                     onChange={handleChange}
                     fullWidth
-                />
+                /> */}
                 <Button
                     variant="contained"
                     color="primary"
@@ -79,4 +89,4 @@ const ProfileEdit: React.FC = () => {
     );
 };
 
-export default ProfileEdit;
+export default ProfilePage;

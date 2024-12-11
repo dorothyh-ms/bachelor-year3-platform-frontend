@@ -51,7 +51,7 @@ const InvitePlayer = () => {
 
             {/* Lobby Dropdown */}
             {loadingLobbies ? (
-                <CircularProgress />
+                <CircularProgress color='secondary' />
             ) : errorLobbies ? (
                 <Typography color="error">Failed to load lobbies.</Typography>
             ) : (
@@ -71,7 +71,7 @@ const InvitePlayer = () => {
 
             {/* Player Dropdown */}
             {loadingPlayers ? (
-                <CircularProgress />
+                <CircularProgress color='secondary' />
             ) : errorPlayers ? (
                 <Typography color="error">Failed to load players.</Typography>
             ) : (

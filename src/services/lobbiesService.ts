@@ -1,3 +1,4 @@
+import { Lobby } from '../types/Lobby';
 import axios from './axios';
 
 export const fetchLobbies = async () => {
@@ -10,8 +11,8 @@ export const createLobby = async (gameId: string) => {
     return response.data;
 };
 
-export const joinLobby = async (lobbyId: string) => {
-    const response = await axios.patch(`/lobbies/${lobbyId}`);
-    return response.data;
-};
 
+export async function joinLobby(lobbyId: string) : Promise<Lobby>   {
+    const {data: lobby} = await axios.patch<Lobby>(`/lobbies/${lobbyId}`);
+    return lobby;
+}

@@ -6,6 +6,6 @@ export interface Lobby {
     game: Game;
     lobbyStatus: string;
     createdBy: Player;
-    matchUrl: string;
+    matchURL: string;
     createdDate: string;
 }

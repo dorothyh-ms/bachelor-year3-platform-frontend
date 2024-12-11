@@ -4,13 +4,16 @@ import { createLobby } from '../services/lobbiesService';
 
 
 // Hook for creating a lobby
-export function useCreateLobby() {
+export function useCreateLobby(customOnSuccess?: () => void) {
     const queryClient = useQueryClient();
 
     const {mutate, isPending, isError} =  useMutation({
         mutationFn: createLobby,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['lobbies'] });
+            if (customOnSuccess) {
+                customOnSuccess();
+            }
         },
     });
 
