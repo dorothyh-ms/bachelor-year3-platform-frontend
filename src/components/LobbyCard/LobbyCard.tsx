@@ -13,8 +13,7 @@ const LobbyCard = (props: LobbyCardProps) => {
     const { loggedInUser } = useContext(SecurityContext);
     const currentUserCreatedLobby = loggedInUser == lobby.createdBy.username;
     let description;
-    console.log("currentUserCreatedLobby", currentUserCreatedLobby)
-    
+
     if (currentUserCreatedLobby) {
         description = "You created this lobby ";
     } else {

@@ -13,7 +13,6 @@ const keycloakConfig = {
     clientId: import.meta.env.VITE_KC_CLIENT_ID,
 }
 
-console.log(keycloakConfig)
 const keycloak: Keycloak = new Keycloak(keycloakConfig)
 
 
