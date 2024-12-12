@@ -1,14 +1,10 @@
-import { Lobby } from "./Lobby";
-import Player from "./Player";
+import {Lobby} from "./Lobby.ts";
+import {Player} from "./Player.ts";
 
-type Invite = {
+export interface Invite {
     id: string;
-    sender : Player;
-    recipient : Player;
-    lobby : Lobby;
-    inviteStatus : string;
-    dateSent: string;
-
+    sender: Player;
+    recipient: Player;
+    lobby: Lobby;
+    inviteStatus: string;
 }
-
-export default Invite;

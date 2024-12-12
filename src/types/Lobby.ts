@@ -1,11 +1,11 @@
-import { Game } from "./Game";
-import Player from "./Player";
+import {Game} from "./Game.ts";
+import {Player} from "./Player.ts";
 
 export interface Lobby {
     id: string;
     game: Game;
-    lobbyStatus: string;
-    createdBy: Player;
-    matchUrl: string;
-    createdDate: string;
+    initiatingPlayer: Player;
+    joinedPlayer: Player;
+    status: string;
+    dateCreated: string;
 }
