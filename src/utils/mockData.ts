@@ -19,12 +19,3 @@ export const mockLobby = {
     ],
     host: "Ruth",
 };
-
-export const mockInvitations = [
-    { id: 1, inviter: 'Player1', game: 'Battleship', date: '2024-11-20', status: 'Pending' },
-    { id: 2, inviter: 'Player2', game: 'Chess', date: '2024-11-19', status: 'Pending' },
-    { id: 3, inviter: 'Player3', game: 'Checkers', date: '2024-11-18', status: 'Accepted' },
-];
-
-
-

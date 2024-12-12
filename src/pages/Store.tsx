@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, Grid, Button } from '@mui/material';
+import PageLayout from '../layouts/PageLayout';
 
 const mockStoreItems = [
     { id: 1, name: 'Game Title 1', price: '50.29 €', stock: 'In Stock' },
@@ -7,15 +8,9 @@ const mockStoreItems = [
     { id: 3, name: 'Game Title 3', price: '30.00 €', stock: 'Not Available' },
 ];
 
-const Store: React.FC = () => {
+const Store = () => {
     return (
-        <Box sx={{ padding: '2rem', backgroundColor: '#f0f4f8' }}>
-            <Typography variant="h4" align="center" gutterBottom sx={{ color: '#4CAF50' }}>
-                Store
-            </Typography>
-            <Typography align="center" sx={{ marginBottom: '2rem', color: '#555' }}>
-                Explore and purchase games
-            </Typography>
+       <PageLayout title="Store">
             <Grid container spacing={3}>
                 {mockStoreItems.map((item) => (
                     <Grid item xs={12} sm={6} md={4} key={item.id}>
@@ -45,7 +40,7 @@ const Store: React.FC = () => {
                     </Grid>
                 ))}
             </Grid>
-        </Box>
+            </PageLayout>
     );
 };
 
