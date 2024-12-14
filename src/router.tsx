@@ -9,8 +9,9 @@ import GameInvitations from "./pages/InvitationsPage";
 import ProfilePage from "./pages/ProfilePage";
 import Lobby from "./pages/LobbiesPage";
 import MainLayout from "./layouts/MainLayout";
-import { FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, STORE } from "./constants/routes";
+import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, STORE } from "./constants/routes";
 import RequireCompletedProfile from "./components/RequireCompletedProfile/RequireCompletedProfile";
+import PlayersPage from "./pages/AnalyticsPage";
 
 
 
@@ -21,15 +22,16 @@ const router = createBrowserRouter(
             <Route path={STORE} element={<Store />} />
             <Route element={<RequireAuth />}>
                 <Route element={<RequireCompletedProfile />} >
-                <Route path={GAMES} element={<Games />} />
+                    <Route path={GAMES} element={<Games />} />
                     <Route path={FRIENDS} element={<Friends />} />
                     <Route path={INVITES} element={<GameInvitations />} />
                     <Route path={PROFILE} element={<ProfilePage />} />
                     <Route path={LOBBIES} element={<Lobby />} />
-                    </Route>
+                    <Route path={ANALYTICS} element={<PlayersPage />} />
+                </Route>
             </Route>
         </Route >
-     
+
 
     )
 );

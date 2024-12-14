@@ -4,7 +4,7 @@ import FriendList from '../components/FriendList';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
 import PageLayout from '../layouts/PageLayout';
 
-const Friends: React.FC = () => {
+const Friends =() => {
     const [query, setQuery] = useState('');
     const [friendUserId, setFriendUserId] = useState('');
 

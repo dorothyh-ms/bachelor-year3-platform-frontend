@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+
 import { joinLobby } from '../services/lobbiesService';
-import { useNavigate } from 'react-router-dom';
+
 
 
 

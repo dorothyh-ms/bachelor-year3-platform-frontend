@@ -4,6 +4,7 @@ import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from '../
 import {isExpired} from 'react-jwt';
 import SecurityContext from "./SecurityContext"
 import { useRecordLogin } from '../hooks/useRecordLogin';
+import User from '../types/User';
 interface IWithChildren {
     children: ReactNode
 }
@@ -19,7 +20,7 @@ const keycloak: Keycloak = new Keycloak(keycloakConfig)
 
 export default function SecurityContextProvider({children}: IWithChildren) {
     const {recordLogin} = useRecordLogin();
-    const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
+    const [loggedInUser, setLoggedInUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
 
@@ -32,7 +33,13 @@ export default function SecurityContextProvider({children}: IWithChildren) {
 
     keycloak.onAuthSuccess = () => {
         addAccessTokenToAuthHeader(keycloak.token)
-        setLoggedInUser(keycloak.idTokenParsed?.given_name)
+        if(keycloak.idTokenParsed){
+            console.log(keycloak)
+        setLoggedInUser({
+            username: keycloak.idTokenParsed.given_name,
+            roles : keycloak.tokenParsed?.realm_access?.roles ?? []
+        })
+    }
     }
 
     keycloak.onAuthLogout = () => {

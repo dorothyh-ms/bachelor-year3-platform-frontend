@@ -16,7 +16,7 @@ import { useFetchLobbies } from '../hooks/useFetchLobbies';
 import { useCreateLobby } from '../hooks/useCreateLobby';
 import { Lobby as LobbyType } from '../types/Lobby'; // Import the Lobby definition from types
 
-const Lobby: React.FC = () => {
+const Lobby= () => {
     const { data: lobbies, isLoading, isError } = useFetchLobbies();
     const createLobby = useCreateLobby();
 

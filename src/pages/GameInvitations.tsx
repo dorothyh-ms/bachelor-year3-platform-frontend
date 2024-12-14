@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
 import { useFetchInvites } from "../hooks/useFetchInvites.ts";
 
-const GameInvitations: React.FC = () => {
+const GameInvitations = () => {
     const { data: invites, isLoading, isError } = useFetchInvites();
     return (
         <Box sx={{ padding: 2 }}>

@@ -6,7 +6,7 @@ import './App.css';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import SecurityContextProvider from './context/SecurityContextProvider';
-import theme from './theme';
+import theme from './theme/theme';
 import router from './router';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 const queryClient = new QueryClient();

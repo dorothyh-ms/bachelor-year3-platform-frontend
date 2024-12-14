@@ -9,9 +9,9 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import GroupIcon from '@mui/icons-material/Group';
 import MailIcon from '@mui/icons-material/Mail';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
-
-import { FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE } from "../constants/routes"
+import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE } from "../constants/routes"
 import SecurityContext from "../context/SecurityContext";
 import { useNavigate } from "react-router-dom";
 
@@ -74,9 +74,17 @@ const MainLayout = () => {
             text: "Lobbies", 
             icon: <MeetingRoomIcon color="secondary"/>,
             handleClick : () => {navigate(LOBBIES)}
-        }
+        },
+        
     ]
-
+if (loggedInUser){
+    userLinks.push({
+        route: ANALYTICS, 
+        text: "Analytics", 
+        icon: <AnalyticsIcon color="secondary"/>,
+        handleClick : () => {navigate(ANALYTICS)}
+    })
+}
 
 
     const renderNavLinks = () => {
@@ -138,7 +146,7 @@ const MainLayout = () => {
                             fontSize: 12,
                         }}
                     >
-                        {loggedInUser ? loggedInUser : <Button 
+                        {loggedInUser ? loggedInUser.username : <Button 
                         color="secondary" 
                         onClick={() => {login()}}
                         variant='contained'
