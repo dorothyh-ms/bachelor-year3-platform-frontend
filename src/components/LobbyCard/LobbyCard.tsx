@@ -4,6 +4,7 @@ import SecurityContext from "../../context/SecurityContext";
 import { useContext } from "react";
 import dayjs from 'dayjs';
 import formatDate from "../../utils/formatDate";
+import { useJoinLobby } from "../../hooks/useJoinLobby";
 
 interface LobbyCardProps {
     lobby: Lobby
@@ -11,6 +12,8 @@ interface LobbyCardProps {
 const LobbyCard = (props: LobbyCardProps) => {
     const { lobby } = props;
     const { loggedInUser } = useContext(SecurityContext);
+    
+    const {joinLobby} = useJoinLobby();
     const currentUserCreatedLobby = loggedInUser == lobby.createdBy.username;
     let description;
 
@@ -28,10 +31,14 @@ const LobbyCard = (props: LobbyCardProps) => {
                 <Typography variant="caption">
                     {description}
                 </Typography>
-                {!currentUserCreatedLobby && <Button
+                {!currentUserCreatedLobby && (!lobby.matchUrl) &&<Button
                     variant="contained"
                     color="secondary"
-                    // onClick={() => handleJoinLobby(lobby.id)}
+                    onClick={() => 
+                        joinLobby(lobby.id)
+                    
+
+                    }
                 >
                     Join game
                 </Button>}

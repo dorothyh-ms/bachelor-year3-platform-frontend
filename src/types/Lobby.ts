@@ -4,8 +4,8 @@ import {Player} from "./Player.ts";
 export interface Lobby {
     id: string;
     game: Game;
-    initiatingPlayer: Player;
-    joinedPlayer: Player;
-    status: string;
-    dateCreated: string;
+    lobbyStatus: string;
+    createdBy: Player;
+    matchURL: string;
+    createdDate: string;
 }

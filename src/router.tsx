@@ -6,31 +6,32 @@ import Store from "./pages/Store";
 import Friends from "./pages/FriendsPage";
 
 import GameInvitations from "./pages/InvitationsPage";
-import ProfileEdit from "./pages/ProfileEdit";
+import ProfilePage from "./pages/ProfilePage";
 import Lobby from "./pages/LobbiesPage";
 import MainLayout from "./layouts/MainLayout";
+import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, STORE } from "./constants/routes";
+import RequireCompletedProfile from "./components/RequireCompletedProfile/RequireCompletedProfile";
+import PlayersPage from "./pages/AnalyticsPage";
 
-export const HOME = "/";
-export const GAMES = "/games"
-export const STORE = "/store"
-export const FRIENDS = '/friends'
-export const INVITES = '/invites'
-export const PROFILE = '/profile'
-export const LOBBIES = '/lobbies'
+
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<MainLayout />}>
-            <Route path={HOME} element={<Home/>}/>
-            <Route path={GAMES} element={<Games/>}/>
-            <Route path={STORE} element={<Store/>}/>
+            <Route path={HOME} element={<Home />} />
+            <Route path={STORE} element={<Store />} />
             <Route element={<RequireAuth />}>
-                <Route path={FRIENDS} element={<Friends/>}/>
-                <Route path={INVITES} element={<GameInvitations/>}/>
-                <Route path={PROFILE} element={<ProfileEdit/>}/>
-                <Route path={LOBBIES} element={<Lobby/>}/>
+                <Route element={<RequireCompletedProfile />} >
+                    <Route path={GAMES} element={<Games />} />
+                    <Route path={FRIENDS} element={<Friends />} />
+                    <Route path={INVITES} element={<GameInvitations />} />
+                    <Route path={PROFILE} element={<ProfilePage />} />
+                    <Route path={LOBBIES} element={<Lobby />} />
+                    <Route path={ANALYTICS} element={<PlayersPage />} />
+                </Route>
             </Route>
-        </Route>
+        </Route >
+
 
     )
 );

@@ -3,6 +3,8 @@ import Keycloak from 'keycloak-js'
 import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from '../services/auth';
 import {isExpired} from 'react-jwt';
 import SecurityContext from "./SecurityContext"
+import { useRecordLogin } from '../hooks/useRecordLogin';
+import User from '../types/User';
 interface IWithChildren {
     children: ReactNode
 }
@@ -17,17 +19,27 @@ const keycloak: Keycloak = new Keycloak(keycloakConfig)
 
 
 export default function SecurityContextProvider({children}: IWithChildren) {
-
-    const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
+    const {recordLogin} = useRecordLogin();
+    const [loggedInUser, setLoggedInUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
 
-        keycloak.init({onLoad: 'login-required'})
+        keycloak.init({onLoad: 'login-required'}).then((authenticated) => {
+            if (authenticated){
+                recordLogin();
+            }
+        })
     }, [])
 
     keycloak.onAuthSuccess = () => {
         addAccessTokenToAuthHeader(keycloak.token)
-        setLoggedInUser(keycloak.idTokenParsed?.given_name)
+        if(keycloak.idTokenParsed){
+            console.log(keycloak)
+        setLoggedInUser({
+            username: keycloak.idTokenParsed.given_name,
+            roles : keycloak.tokenParsed?.realm_access?.roles ?? []
+        })
+    }
     }
 
     keycloak.onAuthLogout = () => {

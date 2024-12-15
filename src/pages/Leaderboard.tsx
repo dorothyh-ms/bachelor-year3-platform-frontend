@@ -8,7 +8,7 @@ const mockLeaderboard = [
     { id: 3, name: 'Player #3', points: 3900, level: 3, avatar: '' },
 ];
 
-const Leaderboard: React.FC = () => {
+const Leaderboard = () => {
     return (
         <Box sx={{ padding: '2rem', backgroundColor: '#f0f4f8' }}>
             <Typography variant="h4" align="center" gutterBottom sx={{ color: '#4CAF50' }}>

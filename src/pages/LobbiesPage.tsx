@@ -31,7 +31,7 @@ const Lobby = () => {
 
 
     const renderLobbies = () => {
-        if (lobbiesLoading) return <CircularProgress />
+        if (lobbiesLoading) return <CircularProgress color='secondary' />
         if (lobbiesLoadError) return <Typography color="error">Failed to load lobbies.</Typography>
         return <Box sx={{width: "100%"}}>
                 {lobbies?.length ? (

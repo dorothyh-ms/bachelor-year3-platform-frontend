@@ -8,7 +8,7 @@ const mockGames = [
     { id: 4, name: 'Game 4', img: '' },
 ];
 
-const Home: React.FC = () => {
+const Home = () => {
     return (
         <Box sx={{ padding: '2rem', backgroundColor: '#f0f4f8' }}>
             <Typography variant="h4" align="center" gutterBottom sx={{ color: '#4CAF50' }}>
