@@ -1,5 +1,5 @@
 import React from 'react';
-import FriendCard from './FriendCard';
+import FriendCard from '../components/FriendCard/FriendCard';
 import { Grid, Typography } from '@mui/material';
 
 type FriendListProps = {
