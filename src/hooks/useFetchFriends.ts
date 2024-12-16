@@ -1,33 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { Friend } from '../types/Friend'; // Define the Friend type
-
-const fetchFriends = async (): Promise<Friend[]> => {
-    const token = localStorage.getItem('access_token'); // Adjust if the token is stored differently
-
-    console.log("local token: " + token);
-
-    if (!token) {
-        throw new Error('No access token found');
-    }
-
-    const response = await axios.get('http://localhost:8091/api/friends', {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-    });
-
-    return response.data;
-};
+import { fetchFriends } from '../services/friendsService.ts';
 
 // Hook for fetching friends
 export function useFetchFriends() {
-    return useQuery({
-        queryKey: ['friends'],
-        queryFn: fetchFriends,
+    const { data: friends, isPending: isLoading, isError } = useQuery({
+        queryKey: ['friends'], // Cache key
+        queryFn: fetchFriends, // API service function
         retry: 1, // Retry once if there's an error
         refetchOnWindowFocus: false, // Prevent refetching on window focus
     });
+
+    return {
+        friends,
+        isLoading,
+        isError,
+    };
 }
