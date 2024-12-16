@@ -1,22 +1,10 @@
-// import { createContext } from 'react';
-//
-// export interface ISecurityContext {
-//     isAuthenticated: boolean;
-//     login: () => void;
-//     logout: () => void;
-// }
-//
-// export const SecurityContext = createContext<ISecurityContext>({
-//     isAuthenticated: false,
-//     login: () => {},
-//     logout: () => {},
-// });
 
 import {createContext} from 'react'
+import User from '../types/User'
 
 export interface ISecurityContext {
     isAuthenticated: () => boolean
-    loggedInUser: string | undefined
+    loggedInUser: User | undefined
     login: () => void
     logout: () => void
 }

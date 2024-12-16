@@ -11,62 +11,36 @@ import {
     DialogContent,
     DialogActions,
     CircularProgress,
-    Autocomplete,
 } from '@mui/material';
 import { useFetchLobbies } from '../hooks/useFetchLobbies';
-import { useFetchGames } from '../hooks/useFetchGames';
 import { useCreateLobby } from '../hooks/useCreateLobby';
-import { useJoinLobby } from '../hooks/useJoinLobby'; // Import the hook for joining lobbies
+import { Lobby as LobbyType } from '../types/Lobby'; // Import the Lobby definition from types
 
-const Lobby: React.FC = () => {
-    const { data: lobbies, isLoading: isLoadingLobbies, isError: isErrorLobbies } = useFetchLobbies();
-    const { data: games, isLoading: isLoadingGames, isError: isErrorGames } = useFetchGames();
+const Lobby= () => {
+    const { data: lobbies, isLoading, isError } = useFetchLobbies();
     const createLobby = useCreateLobby();
-    const joinLobby = useJoinLobby(); // Initialize the join lobby hook
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [selectedGame, setSelectedGame] = useState<{ id: string; name: string } | null>(null);
+    const [gameId, setGameId] = useState('');
 
     const handleCreateLobby = () => {
-        if (!selectedGame) {
-            alert('Please select a valid game.');
+        if (!gameId.trim()) {
+            alert('Please provide a valid Game ID');
             return;
         }
 
-        createLobby.mutate(selectedGame.id, {
+        createLobby.mutate(gameId, {
             onSuccess: () => {
                 alert('Lobby created successfully!');
-                setSelectedGame(null);
+                setGameId('');
                 setOpenDialog(false);
             },
             onError: (error) => {
                 console.error('Error creating lobby:', error);
-                alert('Failed to create lobby.');
+                alert('Failed to create lobby. Please try again.');
             },
         });
     };
-
-    const handleJoinLobby = (lobbyId: string) => {
-        if (!lobbyId) {
-            alert('Invalid lobby ID.');
-            return;
-        }
-
-        joinLobby.mutate(lobbyId, {
-            onSuccess: () => {
-                alert('Successfully joined the lobby!');
-            },
-            onError: (error) => {
-                console.error('Error joining lobby:', error.response || error.message || error);
-                if (error.response?.status === 403) {
-                    alert('You do not have permission to join this lobby. Please check your roles or permissions.');
-                } else {
-                    alert('Failed to join the lobby.');
-                }
-            },
-        });
-    };
-
 
     return (
         <Box sx={{ padding: 3 }}>
@@ -74,68 +48,57 @@ const Lobby: React.FC = () => {
                 Game Lobbies
             </Typography>
 
-            {/* Create Lobby Button */}
-            <Button variant="contained" color="primary" onClick={() => setOpenDialog(true)} sx={{ marginBottom: 2 }}>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setOpenDialog(true)}
+                sx={{ marginBottom: 2 }}
+            >
                 Create Lobby
             </Button>
 
-            {/* Create Lobby Dialog */}
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                <DialogTitle>Create New Lobby</DialogTitle>
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                aria-labelledby="create-lobby-title"
+                aria-describedby="create-lobby-description"
+            >
+                <DialogTitle id="create-lobby-title">Create New Lobby</DialogTitle>
                 <DialogContent>
-                    {isLoadingGames ? (
-                        <CircularProgress />
-                    ) : isErrorGames ? (
-                        <Typography color="error">Failed to load games.</Typography>
-                    ) : (
-                        <Autocomplete
-                            options={games || []}
-                            getOptionLabel={(option) => option.name}
-                            onChange={(event, value) => setSelectedGame(value)}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Select Game"
-                                    fullWidth
-                                    margin="dense"
-                                    placeholder="Type to search for a game"
-                                />
-                            )}
-                        />
-                    )}
+                    <TextField
+                        label="Game ID"
+                        value={gameId}
+                        onChange={(e) => setGameId(e.target.value)}
+                        fullWidth
+                        margin="dense"
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpenDialog(false)} color="secondary">
                         Cancel
                     </Button>
-                    <Button onClick={handleCreateLobby} color="primary" disabled={!selectedGame}>
+                    <Button onClick={handleCreateLobby} color="primary">
                         Create
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            {/* Display Lobbies */}
-            {isLoadingLobbies ? (
-                <CircularProgress />
-            ) : isErrorLobbies ? (
-                <Typography color="error">Failed to load lobbies.</Typography>
-            ) : (
+            {isLoading && (
+                <Box display="flex" alignItems="center" justifyContent="center">
+                    <CircularProgress />
+                    <Typography sx={{ marginLeft: 2 }}>Loading lobbies...</Typography>
+                </Box>
+            )}
+            {isError && <Typography color="error">Failed to load lobbies.</Typography>}
+            {!isLoading && !isError && (
                 <Box>
                     {lobbies?.length ? (
-                        lobbies.map((lobby: any) => (
+                        lobbies.map((lobby: LobbyType) => ( // Use the LobbyType here
                             <Card key={lobby.id} sx={{ marginBottom: 2 }}>
                                 <CardContent>
                                     <Typography variant="h6">Lobby ID: {lobby.id}</Typography>
                                     <Typography>Game: {lobby.gameDto.name}</Typography>
                                     <Typography>Status: {lobby.lobbyStatus}</Typography>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        onClick={() => handleJoinLobby(lobby.id)}
-                                        sx={{ marginTop: 1 }}
-                                    >
-                                        Join
-                                    </Button>
                                 </CardContent>
                             </Card>
                         ))

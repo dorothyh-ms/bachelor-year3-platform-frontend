@@ -1,48 +1,75 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import keycloak, { initializeKeycloak } from '../keycloak';
+import  {  useState, useEffect, ReactNode } from 'react';
+import Keycloak from 'keycloak-js'
 import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from '../services/auth';
-
-interface ISecurityContext {
-    isAuthenticated: boolean;
-    loggedInUser: string | undefined;
-    login: () => void;
-    logout: () => void;
+import {isExpired} from 'react-jwt';
+import SecurityContext from "./SecurityContext"
+import { useRecordLogin } from '../hooks/useRecordLogin';
+import User from '../types/User';
+interface IWithChildren {
+    children: ReactNode
 }
 
-export const SecurityContext = createContext<ISecurityContext>({
-    isAuthenticated: false,
-    loggedInUser: undefined,
-    login: () => {},
-    logout: () => {},
-});
+const keycloakConfig = {
+    url: import.meta.env.VITE_KC_URL,
+    realm: import.meta.env.VITE_KC_REALM,
+    clientId: import.meta.env.VITE_KC_CLIENT_ID,
+}
 
-const SecurityContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState<string | undefined>(undefined);
+const keycloak: Keycloak = new Keycloak(keycloakConfig)
+
+
+export default function SecurityContextProvider({children}: IWithChildren) {
+    const {recordLogin} = useRecordLogin();
+    const [loggedInUser, setLoggedInUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
-        const initialize = async () => {
-            try {
-                await initializeKeycloak();
-                setIsAuthenticated(keycloak.authenticated || false);
-                if (keycloak.authenticated) {
-                    addAccessTokenToAuthHeader(keycloak.token);
-                    setLoggedInUser(keycloak.idTokenParsed?.given_name);
-                }
-            } catch (error) {
-                console.error('Failed to initialize Keycloak:', error);
+
+        keycloak.init({onLoad: 'login-required'}).then((authenticated) => {
+            if (authenticated){
+                recordLogin();
             }
-        };
+        })
+    }, [])
 
-        initialize();
-    }, []);
+    keycloak.onAuthSuccess = () => {
+        addAccessTokenToAuthHeader(keycloak.token)
+        if(keycloak.idTokenParsed){
+            console.log(keycloak)
+        setLoggedInUser({
+            username: keycloak.idTokenParsed.given_name,
+            roles : keycloak.tokenParsed?.realm_access?.roles ?? []
+        })
+    }
+    }
 
-    const login = () => keycloak.login();
-    const logout = () => {
-        keycloak.logout({ redirectUri: import.meta.env.VITE_REACT_APP_URL });
-        removeAccessTokenFromAuthHeader();
-        setIsAuthenticated(false);
-    };
+    keycloak.onAuthLogout = () => {
+        removeAccessTokenFromAuthHeader()
+    }
+
+    keycloak.onAuthError = () => {
+        removeAccessTokenFromAuthHeader()
+    }
+
+    keycloak.onTokenExpired = () => {
+        keycloak.updateToken(-1).then(function () {
+            addAccessTokenToAuthHeader(keycloak.token)
+            setLoggedInUser(keycloak.idTokenParsed?.given_name)
+        })
+    }
+
+    function login() {
+        keycloak.login()
+    }
+
+    function logout() {
+        const logoutOptions = {redirectUri: import.meta.env.VITE_REACT_APP_URL}
+        keycloak.logout(logoutOptions)
+    }
+
+    function isAuthenticated() {
+        if (keycloak.token) return !isExpired(keycloak.token)
+        else return false
+    }
 
     return (
         <SecurityContext.Provider
@@ -58,4 +85,4 @@ const SecurityContextProvider: React.FC<{ children: ReactNode }> = ({ children }
     );
 };
 
-export default SecurityContextProvider;
+

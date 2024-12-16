@@ -1,22 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { Invite } from '../types/Invite';
 
-// Fetch game invitations from the backend
-const fetchInvites = async (): Promise<any[]> => {
-    const token = localStorage.getItem('access_token'); // Retrieve the access token
-    const response = await axios.get('http://localhost:8091/api/invites', {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    return response.data; // Return the invitations
+// Function to fetch invites
+const fetchInvites = async (): Promise<Invite[]> => {
+    try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            console.error("No access token found in localStorage");
+            throw new Error("Access token is missing.");
+        }
+
+        const response = await axios.get('http://localhost:8091/api/invites/player', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching invites:", error); // Log any error
+        throw error;
+    }
 };
 
-// React Query Hook for fetching invites
-export const useFetchInvites = () => {
+
+// Hook for fetching lobbies
+export function useFetchInvites() {
     return useQuery({
-        queryKey: ['invites'], // Unique key to identify this query
-        queryFn: fetchInvites, // Function to fetch datas
+        queryKey: ['invites'],
+        queryFn: fetchInvites,
+        retry: 1, // Retry once if there's an error
+        refetchOnWindowFocus: false, // Prevent refetching on window focus
     });
-};
+}
