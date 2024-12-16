@@ -10,9 +10,10 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import GroupIcon from '@mui/icons-material/Group';
 import MailIcon from '@mui/icons-material/Mail';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 
-import { FRIENDS, GAMES, INVITES, LOBBIES, STORE } from "../constants/routes"
+import {FAVORITES, FRIENDS, GAMES, INVITES, LOBBIES, STORE} from "../constants/routes"
 import SecurityContext from "../context/SecurityContext";
 import { useNavigate } from "react-router-dom";
 
@@ -37,46 +38,52 @@ const MainLayout = () => {
 
     const drawerLinks: NavigationLink[] = [
         {
-            route: HOME, 
-            text: "Home", 
-            icon: <HomeIcon color="secondary"/>, 
+            route: HOME,
+            text: "Home",
+            icon: <HomeIcon color="secondary"/>,
             handleClick : () => {navigate(HOME)}
-        }, 
-        // {
-        //     route: STORE, 
-        //     text: "Store", 
-        //     icon: <StorefrontIcon color="secondary"/>,
-        //     handleClick : () => {navigate(STORE)}
-        // },
-        
+        },
+        {
+            route: STORE,
+            text: "Store",
+            icon: <StorefrontIcon color="secondary"/>,
+            handleClick : () => {navigate(STORE)}
+        },
+
     ]
 
     const userLinks: NavigationLink[] = [
         {
-            route: GAMES, 
-            text: "Library", 
-            icon: <CasinoIcon color="secondary"/>,
-            handleClick : () => {navigate(GAMES)}
+            route: GAMES,
+            text: "Library",
+            icon: <CasinoIcon color="secondary" />,
+            handleClick: () => navigate(GAMES),
         },
         {
-            route: FRIENDS, 
-            text: "Friends", 
-            icon: <GroupIcon color="secondary"/>,
-            handleClick : () => {navigate(FRIENDS)}
-        }, 
+            route: FRIENDS,
+            text: "Friends",
+            icon: <GroupIcon color="secondary" />,
+            handleClick: () => navigate(FRIENDS),
+        },
         {
-            route: INVITES, 
-            text: "Invites", 
-            icon: <MailIcon color="secondary"/>,
-            handleClick : () => {navigate(INVITES)}
-        }, 
+            route: INVITES,
+            text: "Invites",
+            icon: <MailIcon color="secondary" />,
+            handleClick: () => navigate(INVITES),
+        },
         {
-            route: LOBBIES, 
-            text: "Lobbies", 
-            icon: <MeetingRoomIcon color="secondary"/>,
-            handleClick : () => {navigate(LOBBIES)}
-        }
-    ]
+            route: LOBBIES,
+            text: "Lobbies",
+            icon: <MeetingRoomIcon color="secondary" />,
+            handleClick: () => navigate(LOBBIES),
+        },
+        {
+            route: FAVORITES,
+            text: "Favorites",
+            icon: <FavoriteIcon color="secondary" />,
+            handleClick: () => navigate(FAVORITES),
+        },
+    ];
 
 
 
@@ -92,7 +99,7 @@ const MainLayout = () => {
     }
 
 
-    
+
     return <Box sx={{display: 'flex'}}>
                 <Drawer
                     sx={{
@@ -104,7 +111,7 @@ const MainLayout = () => {
                             backgroundColor: '#1E1E2F',
                             color: '#ffffff',
                         },
-                      
+
                     }}
                     variant="permanent"
                     anchor="left"
@@ -125,14 +132,14 @@ const MainLayout = () => {
                     }}
                 >
                     <Avatar
-                        sx={{ cursor: "pointer", 
-                            width:36, 
-                            height:36, 
-                            backgroundColor: "secondary" }}  
+                        sx={{ cursor: "pointer",
+                            width:36,
+                            height:36,
+                            backgroundColor: "secondary" }}
                     />
                     <Box
                         sx={{
-                            marginTop: 1,                         
+                            marginTop: 1,
                             fontSize: 12,
                         }}
                     >
@@ -147,7 +154,7 @@ const MainLayout = () => {
                         p: 3,
                         backgroundColor: '#2A2A40',
                         minHeight: '100vh',
-                        display: "flex", 
+                        display: "flex",
                         justifyContent: "center"
                     }}
                 >

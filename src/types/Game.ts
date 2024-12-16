@@ -6,4 +6,5 @@ export interface Game {
     price: number;
     description: string
     image: string;
+    favorite: boolean;
 }

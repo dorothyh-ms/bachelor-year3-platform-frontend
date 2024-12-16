@@ -5,3 +5,4 @@ export const FRIENDS = '/friends'
 export const INVITES = '/invites'
 export const PROFILE = '/profile'
 export const LOBBIES = '/lobbies'
+export const FAVORITES = "/favorites";
