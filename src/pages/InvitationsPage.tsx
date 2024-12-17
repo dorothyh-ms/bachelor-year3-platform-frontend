@@ -1,5 +1,5 @@
 
-import { Box, Card, CardContent, Typography, Button, Grid, CircularProgress } from '@mui/material';
+import { Box, Card, CardContent, Typography, Button, Grid, CircularProgress, Stack } from '@mui/material';
 import { mockInvitations } from '../utils/mockData'; // Import mock data
 import PageLayout from '../layouts/PageLayout';
 import InviteCard from '../components/InviteCard/InviteCard';
@@ -11,17 +11,17 @@ const GameInvitations = () => {
     const renderInvitations = () => {
         if (isLoading) return <CircularProgress color='secondary' />
         if (isError) return <Typography color="error">Failed to load invitations.</Typography>
-        if (!invites || invites.length < 1){
+        if (!invites || invites.length < 1) {
             return <Typography >You have no pending invitations.</Typography>
         }
         return (
-            <Grid container spacing={2}>
+            <Stack sx={{width: {xs: "50%", lg: "25%"}}} spacing={2}>
                 {invites && invites.map((invite) => (
-                    <Grid item xs={12} sm={6} md={4} key={invite.id}>
-                        <InviteCard invite={invite} />
-                    </Grid>
+
+                    <InviteCard invite={invite} />
+
                 ))}
-            </Grid>
+            </Stack>
         )
 
     }
