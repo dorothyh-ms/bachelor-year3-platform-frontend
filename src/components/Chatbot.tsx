@@ -28,6 +28,10 @@ const Chatbot = () => {
         ]);
 
         try {
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { user: false, text: "Bot is typing..." },
+            ]);
             // Trigger the postRequest to send the message
             await postRequest();
 
@@ -54,12 +58,18 @@ const Chatbot = () => {
     // Handle response updates using useEffect
     useEffect(() => {
         if (response) {
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { user: false, text: response.answer }, // Assuming the API returns { reply: 'Bot response' }
-            ]);
+            setMessages((prevMessages) => {
+                // Remove the "Bot is typing..." message (last message)
+                const updatedMessages = prevMessages.slice(0, -1);
+
+                // Add the actual bot response
+                return [
+                    ...updatedMessages,
+                    { user: false, text: response.answer }, // Assuming API returns { answer: 'Bot reply' }
+                ];
+            });
         }
-    }, [response]); // This will run every time `response` changes
+    }, [response]); // Runs when `response` changes
 
     return (
         <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>
