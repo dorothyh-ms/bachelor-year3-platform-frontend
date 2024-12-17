@@ -1,4 +1,3 @@
-import axios from 'axios'
 import {Game} from "../types/Game.ts";
 import api from "./axios.ts";
 
