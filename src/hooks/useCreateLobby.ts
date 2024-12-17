@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Function to create a lobby
 const createLobby = async (gameId: string): Promise<any> => {
-    const response = await axios.post('http://localhost:8091/api/lobbies', { gameId });
+    const response = await axios.post('http://localhost:8092/api/lobbies', { gameId });
     return response.data;
 };
 

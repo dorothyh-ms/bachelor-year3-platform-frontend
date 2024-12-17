@@ -4,8 +4,8 @@ import { useFetchGames } from '../hooks/useFetchGames.ts'; // Hook for fetching 
 import { Game } from '../types/Game'; // Game type definition
 
 const Games: React.FC = () => {
-    const { data: games, isLoading, isError } = useFetchGames();
-
+    const { isLoading, isError, data: games} = useFetchGames();
+    console.log("page" + games)
     return (
         <Box sx={{ padding: 3, backgroundColor: 'background.default' }}>
             <Typography variant="h4" color="primary" gutterBottom>

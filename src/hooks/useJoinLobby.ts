@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Function to join a lobby
 const joinLobby = async (lobbyId: string): Promise<any> => {
-    const response = await axios.patch(`http://localhost:8091/api/lobbies/${lobbyId}`);
+    const response = await axios.patch(`http://localhost:8092/api/lobbies/${lobbyId}`);
     return response.data;
 };
 
