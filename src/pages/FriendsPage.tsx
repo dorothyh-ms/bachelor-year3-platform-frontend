@@ -18,7 +18,7 @@ import {
 import FriendList from '../components/FriendList.tsx';
 import FriendSearch from '../pages/FriendSearch.tsx';
 import { useFetchFriends } from '../hooks/useFetchFriends';
-import { useSearchPlayers } from '../hooks/useSearchPlayers';
+// import { useSearchPlayers } from '../hooks/useSearchPlayers';
 import { addFriend } from '../services/friendsService.ts';
 import { useQueryClient } from '@tanstack/react-query';
 
