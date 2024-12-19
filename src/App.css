@@ -114,3 +114,18 @@ a:hover {
 .chatbot-container.open {
   max-height: 500px;
 }
+.chatbot-dropdown {
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.chatbot-dropdown select {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
