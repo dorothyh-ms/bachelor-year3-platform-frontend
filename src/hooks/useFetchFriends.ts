@@ -1,18 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchFriends } from '../services/friendsService.ts';
+import axiosApi from '../services/axios';
+import { Friend } from '../types/Friend';
 
-// Hook for fetching friends
+// Fetch friends
+const fetchFriends = async (): Promise<Friend[]> => {
+    const response = await axiosApi.get('/friends');
+    return response.data;
+};
+
 export function useFetchFriends() {
-    const { data: friends, isPending: isLoading, isError } = useQuery({
-        queryKey: ['friends'], // Cache key
-        queryFn: fetchFriends, // API service function
-        retry: 1, // Retry once if there's an error
-        refetchOnWindowFocus: false, // Prevent refetching on window focus
+    const { data: friends, isPending, isError } = useQuery({
+        queryKey: ['friends'],
+        queryFn: fetchFriends,
+        refetchOnWindowFocus: false,
     });
 
-    return {
-        friends,
-        isLoading,
-        isError,
-    };
+    return { friends, isLoading: isPending, isError };
 }

@@ -1,20 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import axiosApi from '../services/axios';
+import { Lobby } from '../types/Lobby';
 
-import { fetchLobbies } from '../services/lobbiesService';
-
-
+const fetchLobbies = async (): Promise<Lobby[]> => {
+    const response = await axiosApi.get('/lobbies');
+    return response.data;
+};
 
 export function useFetchLobbies() {
-    const {data: lobbies, isPending, isError}= useQuery({
+    const { data: lobbies, isPending, isError } = useQuery({
         queryKey: ['lobbies'],
         queryFn: fetchLobbies,
-        retry: 1,
         refetchOnWindowFocus: false,
     });
 
-    return {
-        isLoading: isPending, 
-        isError: isError, 
-        lobbies
-    }
+    return { lobbies, isLoading: isPending, isError };
 }
