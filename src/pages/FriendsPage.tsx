@@ -47,7 +47,7 @@ const FriendsPage: React.FC = () => {
 
         try {
             await addFriend(selectedFriend.id);
-            queryClient.invalidateQueries(['friends']);
+            queryClient.invalidateQueries({ queryKey: ['friends'] }); // Updated here
         } finally {
             handleCloseDialog();
         }
