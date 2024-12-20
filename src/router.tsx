@@ -5,7 +5,7 @@ import Games from "./pages/GamesPage";
 import Store from "./pages/Store";
 import Friends from "./pages/FriendsPage";
 
-import GameInvitations from "./pages/InvitationsPage";
+import GameInvitations from "./pages/GameInvitations"; // Updated component
 import ProfilePage from "./pages/ProfilePage";
 import Lobby from "./pages/LobbiesPage";
 import MainLayout from "./layouts/MainLayout";
@@ -13,15 +13,13 @@ import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, STORE } fro
 import RequireCompletedProfile from "./components/RequireCompletedProfile/RequireCompletedProfile";
 import PlayersPage from "./pages/AnalyticsPage";
 
-
-
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<MainLayout />}>
             <Route path={HOME} element={<Home />} />
             <Route path={STORE} element={<Store />} />
             <Route element={<RequireAuth />}>
-                <Route element={<RequireCompletedProfile />} >
+                <Route element={<RequireCompletedProfile />}>
                     <Route path={GAMES} element={<Games />} />
                     <Route path={FRIENDS} element={<Friends />} />
                     <Route path={INVITES} element={<GameInvitations />} />
@@ -30,9 +28,7 @@ const router = createBrowserRouter(
                     <Route path={ANALYTICS} element={<PlayersPage />} />
                 </Route>
             </Route>
-        </Route >
-
-
+        </Route>
     )
 );
 
