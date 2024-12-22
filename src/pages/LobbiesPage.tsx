@@ -13,16 +13,16 @@ import {
     CircularProgress,
     Autocomplete,
 } from '@mui/material';
-import { useFetchLobbies } from '../hooks/useFetchLobbies';
+import { useGetLobbies } from '../hooks/useLobbies';
 import { useFetchGames } from '../hooks/useGames';
-import { useCreateLobby } from '../hooks/useCreateLobby';
-import { useJoinLobby } from '../hooks/useJoinLobby'; // Import the hook for joining lobbies
+import { useCreateLobby } from '../hooks/useLobbies';
+import { useJoinLobby } from '../hooks/useLobbies'; // Import the hook for joining lobbies
 import LobbyCard from '../components/LobbyCard/LobbyCard';
 import PageLayout from '../layouts/PageLayout';
 
 const Lobby = () => {
-    const {lobbies, isError: lobbiesLoadError, isLoading: lobbiesLoading }  = useFetchLobbies();
-    const { data: games, isLoading: isLoadingGames, isError: isErrorGames } = useFetchGames();
+    const {lobbies, isError: lobbiesLoadError, isLoading: lobbiesLoading }  = useGetLobbies();
+    const {  games, isPending: isLoadingGames, isError: isErrorGames } = useFetchGames();
     const {createLobby, isLoading, isError} = useCreateLobby();
     const { } = useJoinLobby(); // Initialize the join lobby hook
 

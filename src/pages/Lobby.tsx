@@ -12,12 +12,12 @@ import {
     DialogActions,
     CircularProgress,
 } from '@mui/material';
-import { useFetchLobbies } from '../hooks/useFetchLobbies';
+import { useGetLobbies } from '../hooks/useLobbies';
 import { useCreateLobby } from '../hooks/useCreateLobby';
 import { Lobby as LobbyType } from '../types/Lobby'; // Import the Lobby definition from types
 
 const Lobby= () => {
-    const { data: lobbies, isLoading, isError } = useFetchLobbies();
+    const { data: lobbies, isLoading, isError } = useGetLobbies();
     const createLobby = useCreateLobby();
 
     const [openDialog, setOpenDialog] = useState(false);
