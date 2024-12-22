@@ -16,5 +16,7 @@ export async function searchPlayers(username: string): Promise<Friend[]> {
 
 export async function addFriend(friendId: string): Promise<void> {
     console.log(`Adding friend with friendId: ${friendId}`); // Debug log
-    await axios.post(`/friends?friendId=${friendId}`); // Pass friendId as a query parameter
+    await axios.post(`/friends`, {
+        friendId: friendId
+    }); 
 }

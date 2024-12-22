@@ -4,7 +4,7 @@ import { Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, Typograph
 import { Game } from "../../types/Game"
 import defaultGameImage from '../../assets/images/banditgames-mascot.png'
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import { useCreateLobby } from "../../hooks/useCreateLobby";
+import { useCreateLobby } from "../../hooks/useLobbies";
 import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from "react-router-dom";
@@ -30,7 +30,6 @@ const GameCard = (props: GameCardProps) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setSnackBarOpen(false);
     };
 

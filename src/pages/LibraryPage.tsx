@@ -1,18 +1,18 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, CircularProgress, Alert } from '@mui/material';
-import { useFetchGames } from '../hooks/useGames.ts'; // Hook for fetching games
 import { Game } from '../types/Game.ts'; // Game type definition
 import PageLayout from '../layouts/PageLayout.tsx';
 import GameCard from '../components/GameCard/GameCard.tsx';
+import { useFetchGames } from '../hooks/useGames.ts';
 
 const Games= () => {
-    const { data: games, isLoading, isError } = useFetchGames();
+    const {  games, isPending, isError } = useFetchGames();
 
     return (
         <PageLayout title="Library" >
 
             {/* Loading State */}
-            {isLoading && (
+            {isPending && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
                     <CircularProgress color='secondary' />
                 </Box>

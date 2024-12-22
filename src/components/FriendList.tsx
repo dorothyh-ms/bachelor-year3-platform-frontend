@@ -1,40 +1,35 @@
-import React from 'react';
-import FriendCard from '../components/FriendCard/FriendCard';
-import { Grid, Typography } from '@mui/material';
+import { CircularProgress, Stack, Typography } from "@mui/material";
+import { useFetchFriends } from "../hooks/useFriends";
+import FriendCard from "./FriendCard/FriendCard";
+import { Friend } from "../types/Friend";
 
-type FriendListProps = {
-    query: string;
-    friends: Array<{
-        friendId: string;
-        friendUsername: string;
-    }>;
-};
+interface FriendsListProps {
+    friends: Friend[] | undefined,
+    isLoading: boolean,
+    isError: boolean
+}
 
-const FriendList: React.FC<FriendListProps> = ({ query = '', friends = [] }) => {
-    // Safeguard against undefined or null `friends`
-    if (!Array.isArray(friends)) {
-        return <Typography color="error">Invalid data: Friends list is not an array.</Typography>;
+const FriendsList = (props: FriendsListProps) => {
+    const { friends, isLoading, isError } = props;
+
+    console.log("friend", friends)
+    if (isLoading) {
+        return <CircularProgress color="secondary" />
+    }
+    if (isError) {
+        return <Typography>Your friends could not be loaded.</Typography>
     }
 
-    const filteredFriends = friends.filter(
-        friend => friend?.friendUsername?.toLowerCase().includes(query.toLowerCase())
-    );
+    console.log("friends", friends)
+    if (friends) {
+        if (friends.length) {
+           return  <Stack gap={1}>
+                {friends.map(friend => <FriendCard friend={friend} />)}
+            </Stack>
 
-    return (
-        <Grid container spacing={2}>
-            {filteredFriends.length > 0 ? (
-                filteredFriends.map(friend => (
-                    <Grid item xs={12} sm={6} md={4} key={friend.friendId}>
-                        <FriendCard friend={friend} />
-                    </Grid>
-                ))
-            ) : (
-                <Typography variant="body1" color="text.secondary">
-                    No friends match the search query.
-                </Typography>
-            )}
-        </Grid>
-    );
-};
+        }
+    }
+    return <Typography>You have not added any friends yet.</Typography>
+}
 
-export default FriendList;
+export default FriendsList;

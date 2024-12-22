@@ -10,8 +10,8 @@ import GroupIcon from '@mui/icons-material/Group';
 import MailIcon from '@mui/icons-material/Mail';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-
-import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE } from "../constants/routes"
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, SUBMIT_GAME_APPLICATION } from "../constants/routes"
 import SecurityContext from "../context/SecurityContext";
 import { useNavigate } from "react-router-dom";
 
@@ -31,9 +31,6 @@ const MainLayout = () => {
 
     const navigate = useNavigate();
 
-
-
-
     const drawerLinks: NavigationLink[] = [
         {
             route: HOME, 
@@ -50,7 +47,7 @@ const MainLayout = () => {
         
     ]
 
-    const userLinks: NavigationLink[] = [
+    const loggedInPlayerLinks: NavigationLink[] = [
         {
             route: GAMES, 
             text: "Library", 
@@ -75,10 +72,16 @@ const MainLayout = () => {
             icon: <MeetingRoomIcon color="secondary"/>,
             handleClick : () => {navigate(LOBBIES)}
         },
+        {
+            route: SUBMIT_GAME_APPLICATION, 
+            text: "Submit a game", 
+            icon: <AddBoxIcon color="secondary"/>,
+            handleClick : () => {navigate(SUBMIT_GAME_APPLICATION)}
+        },
         
     ]
 if (loggedInUser){
-    userLinks.push({
+    loggedInPlayerLinks.push({
         route: ANALYTICS, 
         text: "Analytics", 
         icon: <AnalyticsIcon color="secondary"/>,
@@ -93,7 +96,7 @@ if (loggedInUser){
             drawerLinks.map((link) => (<NavigationTab link={link} />))
         }
         {
-            loggedInUser && userLinks.map((link) => (<NavigationTab link={link} />))
+            loggedInUser && loggedInPlayerLinks.map((link) => (<NavigationTab link={link} />))
         }
         </>
     }
