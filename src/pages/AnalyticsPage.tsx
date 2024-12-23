@@ -1,11 +1,11 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import PageLayout from "../layouts/PageLayout"
-import PlayersTable from "../components/PlayersTable/PlayersTable";
-import axiosApi from "../services/axios";
+import PlayersTable from "../components/PlayerStatisticsTable/PlayersTable";
+
 
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import useExportPlayerStatisticsCsv from "../hooks/useExportPlayerStatisticsCsv";
-const PlayersPage = () => {
+const AnalyticsPage = () => {
 
     const {handleStatisticsCsvDownload} = useExportPlayerStatisticsCsv();
 
@@ -24,4 +24,4 @@ const PlayersPage = () => {
 
 }
 
-export default PlayersPage;
+export default AnalyticsPage;
