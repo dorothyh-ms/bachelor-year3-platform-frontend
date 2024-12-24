@@ -36,7 +36,7 @@ const FavoritesPage = () => {
                                     genre: favorite.genre,
                                     image: favorite.imageUrl,
                                     price: favorite.price,
-                                    difficulty: favorite.difficultyLevel, // Match the 'Game' interface
+                                    difficulty: favorite.difficultyLevel,
                                 }}
                                 isFavorite={true}
                             />
