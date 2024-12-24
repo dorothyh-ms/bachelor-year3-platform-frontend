@@ -4,6 +4,7 @@ import Home from "./pages/HomePage";
 import Games from "./pages/LibraryPage";
 import Store from "./pages/Store";
 import Friends from "./pages/FriendsPage";
+import FavoritesPage from "./pages/FavoritesPage";
 
 import InvitationsPage from "./pages/InvitationsPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -30,6 +31,7 @@ const router = createBrowserRouter(
                     <Route path={PROFILE} element={<ProfilePage />} />
                     <Route path={LOBBIES} element={<Lobby />} />
                     <Route path={ANALYTICS} element={<AnalyticsPage />} />
+                    <Route path="/favorites" element={<FavoritesPage />} />
                 </Route>
                 <Route path={SUBMIT_GAME_APPLICATION} element={<AddGamePage />} />
             </Route>
