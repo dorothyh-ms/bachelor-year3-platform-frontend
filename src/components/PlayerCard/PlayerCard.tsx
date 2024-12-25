@@ -2,7 +2,7 @@ import { Button, Card, CardActions, CardContent, Typography } from "@mui/materia
 import { Player } from "../../types/Player";
 import { useContext } from "react";
 import SecurityContext from "../../context/SecurityContext";
-import { useAddFriend, useFetchFriends } from "../../hooks/useFriends";
+import { useAddFriend } from "../../hooks/useFriends";
 
 interface PlayerCardProps {
     player: Player

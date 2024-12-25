@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
 
 const mockGames = [

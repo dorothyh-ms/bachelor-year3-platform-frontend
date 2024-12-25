@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography, Card, CardContent, Avatar, Grid } from '@mui/material';
 
 // Mock leaderboard data

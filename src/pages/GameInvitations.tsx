@@ -1,9 +1,9 @@
-import React from 'react';
 import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
-import { useFetchInvites } from "../hooks/useFetchInvites.ts";
+import { useFetchInvites } from "../hooks/useInvites.ts";
+import { Invite } from '../types/Invite.ts';
 
 const GameInvitations = () => {
-    const { data: invites, isLoading, isError } = useFetchInvites();
+    const { invites, isLoading, isError } = useFetchInvites();
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h4" align="center" gutterBottom>
@@ -28,7 +28,7 @@ const GameInvitations = () => {
                 {!isLoading &&
                     !isError &&
                     invites &&
-                    invites.map((invite) => (
+                    invites.map((invite: Invite) => (
                         <Grid item xs={12} sm={6} md={4} key={invite.id}>
                             <Card sx={{ backgroundColor: '#f9f9f9', boxShadow: 2 }}>
                                 <CardContent>
@@ -37,12 +37,12 @@ const GameInvitations = () => {
                                         Invited by: {invite.sender.username}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        Date: {new Date(invite.lobby.dateCreated).toLocaleString()}
+                                        Date: {new Date(invite.lobby.createdDate).toLocaleString()}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary">
                                         Status: {invite.inviteStatus}
                                     </Typography>
-                                    {invite.lobby.status === 'OPEN' && (
+                                    {invite.lobby.lobbyStatus === 'OPEN' && (
                                         <Box sx={{ display: 'flex', gap: 1, marginTop: 2 }}>
                                             <Button variant="contained" color="primary" size="small">
                                                 Accept

@@ -1,8 +1,19 @@
 
-import { Card, CardHeader, Avatar, IconButton, CardMedia, CardContent, Typography, CardActions, Collapse, Chip, Button, SnackbarCloseReason, Snackbar } from "@mui/material"
+import {
+    Card,
+    IconButton,
+    CardMedia,
+    CardContent,
+    Typography,
+    CardActions,
+    Chip,
+    Button,
+    SnackbarCloseReason,
+    Snackbar,
+} from "@mui/material";
 
-import { Game } from "../../types/Game"
-import defaultGameImage from '../../assets/images/banditgames-mascot.png'
+import { Game } from "../../types/Game";
+import defaultGameImage from '../../assets/images/banditgames-mascot.png';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { useCreateLobby } from "../../hooks/useLobbies";
 import { useState } from "react";
@@ -24,7 +35,7 @@ const GameCard = (props: GameCardProps) => {
     const [ snackbarOpen, setSnackBarOpen ] = useState<boolean>(false);
     const [snackbarMessage, setSnackBarMessage] = useState<string>();
     const handleClose = (
-        event: React.SyntheticEvent | Event,
+        _: React.SyntheticEvent | Event,
         reason?: SnackbarCloseReason,
     ) => {
         if (reason === 'clickaway') {
