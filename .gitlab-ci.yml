@@ -29,12 +29,13 @@ build_project:
   stage: build
   image: node:18
   script:
-    - echo "Keycloak URL $VITE_KC_URL"
+    - echo "Keycloak URL $KC_URL"
     - echo "API_URL $API_URL"
-    - echo "VITE_KC_URL=$KC_URL" >> .env
+    - echo "VITE_KC_URL=$KC_URL" > .env
     - echo "VITE_KC_REALM=$KC_REALM" >> .env
     - echo "VITE_KC_CLIENT_ID=$KC_CLIENT_ID" >> .env
     - echo "VITE_API_URL=$API_URL" >> .env
+    - cat .env
     - npm run build
   artifacts:
     paths:
