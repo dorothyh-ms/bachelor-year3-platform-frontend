@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef  } from '@mui/x-data-grid';
 import { usePlayerStatistics } from '../../hooks/usePlayerStatistics';
 import dayjs from 'dayjs';
 import duration from "dayjs/plugin/duration";
@@ -33,7 +33,7 @@ const columns: GridColDef[] = [
         headerName: 'Age',
         display: "flex",
         width: 120,
-        valueGetter: (value, _) => {
+        valueGetter: (value: string) => {
             const today = dayjs(); // Get today's date
             const dob = dayjs(value); // Parse the date of birth string
             return `${today.diff(dob, 'year')}`; // Calculate the age in years
@@ -63,7 +63,7 @@ const columns: GridColDef[] = [
         type: 'number',
         display: "flex",
         width: 240,
-        valueGetter: (value, _) => `${formatSeconds(value)}`,
+        valueGetter: (value : number) => `${formatSeconds(value)}`,
     },
     {
         field: 'wins',
@@ -80,7 +80,7 @@ const columns: GridColDef[] = [
 
 const PlayersTable = () => {
     const { playerStatistics: rows, isLoading } = usePlayerStatistics();
-    console.log(rows)
+
     const rowsWithId = rows?.map((row, index) => ({
         ...row,
         internalId: index,
