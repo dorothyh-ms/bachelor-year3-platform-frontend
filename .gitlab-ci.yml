@@ -1,0 +1,49 @@
+stages:
+  - install
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: production
+  API_TOKEN: $DEPLOYMENT_TOKEN
+  APP_PATH: '$CI_PROJECT_DIR'
+  OUTPUT_PATH: '$CI_PROJECT_DIR/dist'
+
+before_script:
+  - echo "Starting pipeline..."
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: install
+  image: node:18
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+
+build_project:
+  stage: build
+  image: node:18
+  script:
+    - echo "Keycloak URL $VITE_KC_URL"
+    - echo "API_URL $API_URL"
+    - echo "VITE_KC_URL=$KC_URL" >> .env
+    - echo "VITE_KC_REALM=$KC_REALM" >> .env
+    - echo "VITE_KC_CLIENT_ID=$KC_CLIENT_ID" >> .env
+    - echo "VITE_API_URL=$API_URL" >> .env
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+
+
+deploy:
+  stage: deploy
+  image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
+  script:
+    - echo "App deployed successfully."
