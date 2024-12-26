@@ -9,7 +9,7 @@ variables:
   APP_PATH: '$CI_PROJECT_DIR'
   OUTPUT_PATH: '$CI_PROJECT_DIR/dist'
   APP_BUILD_COMMAND: |
-    echo "Generating .env file with CI/CD environment variables..." && \
+    ls . && echo "Generating .env file with CI/CD environment variables..." && \
     echo "VITE_KC_URL=$KC_URL" > .env && \
     echo "VITE_KC_REALM=$KC_REALM" >> .env && \
     echo "VITE_KC_CLIENT_ID=$KC_CLIENT_ID" >> .env && \
@@ -57,4 +57,4 @@ deploy:
   image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
   script:
     - cd .
-    - /bin/bash -c "echo 'Starting deployment...'"
+    - /bin/bash -c "ls"
