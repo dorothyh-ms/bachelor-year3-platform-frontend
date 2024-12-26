@@ -55,5 +55,3 @@ deploy:
   dependencies:
     - build_project
   image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
-  script:
-    - /bin/sh -c "echo 'Starting deployment...'"
