@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Typography, Grid, Button, CircularProgress, Alert } from '@mui/material';
+import { Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { Game } from '../types/Game.ts'; // Game type definition
 import PageLayout from '../layouts/PageLayout.tsx';
 import GameCard from '../components/GameCard/GameCard.tsx';

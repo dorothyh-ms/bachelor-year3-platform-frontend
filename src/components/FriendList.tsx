@@ -1,5 +1,4 @@
 import { CircularProgress, Stack, Typography } from "@mui/material";
-import { useFetchFriends } from "../hooks/useFriends";
 import FriendCard from "./FriendCard/FriendCard";
 import { Friend } from "../types/Friend";
 

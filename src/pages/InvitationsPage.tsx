@@ -1,6 +1,5 @@
 
-import { Box, Card, CardContent, Typography, Button, Grid, CircularProgress, Stack } from '@mui/material';
-import { mockInvitations } from '../utils/mockData'; // Import mock data
+import { Typography, CircularProgress, Stack } from '@mui/material';
 import PageLayout from '../layouts/PageLayout';
 import InviteCard from '../components/InviteCard/InviteCard';
 import { useFetchInvites } from '../hooks/useInvites';

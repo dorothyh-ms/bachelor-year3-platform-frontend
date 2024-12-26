@@ -7,4 +7,5 @@ export interface Invite {
     recipient: Player;
     lobby: Lobby;
     inviteStatus: string;
+    dateSent: string;
 }

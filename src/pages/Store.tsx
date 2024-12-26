@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Typography, Card, CardContent, Grid, Button } from '@mui/material';
+import { Typography, Card, CardContent, Grid, Button } from '@mui/material';
 import PageLayout from '../layouts/PageLayout';
 
 const mockStoreItems = [

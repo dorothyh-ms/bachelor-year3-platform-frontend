@@ -1,4 +1,4 @@
-import Invite from "../types/Invite";
+import {Invite} from "../types/Invite";
 import axiosApi from "./axios";
 
 
@@ -8,7 +8,7 @@ export async function getInvites(): Promise<Invite[]> {
 }
 type AcceptInviteArgs= {
     inviteId: string, 
-    action: ""
+    action: string
 }
 
 export async function acceptInvite(args: AcceptInviteArgs) : Promise<Invite>   {

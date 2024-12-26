@@ -1,5 +1,4 @@
-import React from 'react';
-import {BrowserRouter as Router, Routes, Route, Link, createBrowserRouter, createRoutesFromElements, RouterProvider} from 'react-router-dom';
+import { RouterProvider } from 'react-router-dom';
 
 import './App.css';
 

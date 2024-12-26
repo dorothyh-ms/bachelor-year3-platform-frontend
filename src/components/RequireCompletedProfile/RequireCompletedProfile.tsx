@@ -1,6 +1,5 @@
-import {ReactNode, useContext} from 'react'
-import {Navigate, Outlet} from 'react-router-dom';
-import SecurityContext from '../../context/SecurityContext';
+import { ReactNode } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useFetchProfile } from '../../hooks/useProfile';
 export interface RequireAuthProps {
     children: ReactNode

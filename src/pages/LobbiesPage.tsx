@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Box,
     Typography,
     Button,
-    Card,
-    CardContent,
     TextField,
     Dialog,
     DialogTitle,
@@ -23,7 +21,7 @@ import PageLayout from '../layouts/PageLayout';
 const Lobby = () => {
     const {lobbies, isError: lobbiesLoadError, isLoading: lobbiesLoading }  = useGetLobbies();
     const {  games, isPending: isLoadingGames, isError: isErrorGames } = useFetchGames();
-    const {createLobby, isLoading, isError} = useCreateLobby();
+    const {createLobby} = useCreateLobby();
     const { } = useJoinLobby(); // Initialize the join lobby hook
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -63,7 +61,7 @@ const Lobby = () => {
                         <Autocomplete
                             options={games || []}
                             getOptionLabel={(option) => option.name}
-                            onChange={(event, value) => setSelectedGame(value)}
+                            onChange={(_, value) => setSelectedGame(value)}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
