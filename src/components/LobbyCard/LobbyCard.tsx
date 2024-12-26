@@ -1,5 +1,23 @@
-import { Card, CardContent, Typography, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, IconButton, SnackbarCloseReason, Snackbar } from "@mui/material";
-import { Lobby } from "../../types/Lobby"
+import {
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    IconButton,
+    SnackbarCloseReason,
+    Snackbar,
+} from "@mui/material";
+import { Lobby } from "../../types/Lobby";
 import SecurityContext from "../../context/SecurityContext";
 import { useContext, useState } from "react";
 import dayjs from 'dayjs';
@@ -14,7 +32,7 @@ interface LobbyCardProps {
 }
 const LobbyCard = (props: LobbyCardProps) => {
     const handleClose = (
-        event: React.SyntheticEvent | Event,
+        _: React.SyntheticEvent | Event,
         reason?: SnackbarCloseReason,
     ) => {
         if (reason === 'clickaway') {
@@ -42,7 +60,7 @@ const LobbyCard = (props: LobbyCardProps) => {
    
     const [open, setOpen] = useState<boolean>(false);
     const [invitedPlayerId, setInvitedPlayerId] = useState<string>('');
-    const { friends, isError: friendsError, isLoading: friendsLoading } = useFetchFriends();
+    const { friends } = useFetchFriends();
     
     const handleClickOpen = () => {
         setOpen(true);

@@ -1,6 +1,6 @@
-import { Button, CircularProgress, IconButton, MenuItem, Paper, Snackbar, SnackbarCloseReason, Stack, TextField } from "@mui/material";
+import { Button, IconButton, Snackbar, SnackbarCloseReason, Stack, TextField } from "@mui/material";
 import * as Yup from "yup";
-import { FormikHelpers, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useAddGameToPlatformRequest } from "../../hooks/useAddGameToPlatformRequest";
 import GamePublishRequest from "../../types/GamePublishRequest";
 import { useState } from "react";
@@ -15,7 +15,7 @@ const validationSchema = Yup.object({
 
 const GameForm = () => {
     const handleClose = (
-        event: React.SyntheticEvent | Event,
+        _: React.SyntheticEvent | Event,
         reason?: SnackbarCloseReason,
     ) => {
         if (reason === 'clickaway') {
@@ -46,7 +46,7 @@ const GameForm = () => {
         setSnackBarOpen(true);
     }
     const {submitAddGameToPlatformRequest} = useAddGameToPlatformRequest(handleSuccess);
-    const onSubmit = (values: GamePublishRequest, actions) => {
+    const onSubmit = (values: GamePublishRequest, actions:any) => {
         submitAddGameToPlatformRequest(values);
         actions.resetForm();
     };

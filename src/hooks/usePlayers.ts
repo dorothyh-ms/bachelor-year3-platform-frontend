@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import { getPlayers, getPlayersByUsername } from '../services/playersService';
+import { getPlayersByUsername } from '../services/playersService';
 
 
 

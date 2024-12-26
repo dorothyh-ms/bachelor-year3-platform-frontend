@@ -2,8 +2,6 @@ import { CircularProgress, Stack, Typography } from "@mui/material";
 import { useSearchPlayers } from "../../hooks/usePlayers";
 import PlayerCard from "../PlayerCard/PlayerCard";
 import { Friend } from "../../types/Friend";
-import { useContext } from "react";
-import SecurityContext from "../../context/SecurityContext";
 
 interface PlayerSearchResults {
     searchedUsername: string, 
