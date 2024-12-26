@@ -36,9 +36,11 @@ export default function SecurityContextProvider({children}: IWithChildren) {
         if(keycloak.idTokenParsed){
             console.log(keycloak)
         setLoggedInUser({
+            playerId: keycloak.idTokenParsed.sub ?? "",
             username: keycloak.idTokenParsed.given_name,
             roles : keycloak.tokenParsed?.realm_access?.roles ?? []
-        })
+        });
+       
     }
     }
 
