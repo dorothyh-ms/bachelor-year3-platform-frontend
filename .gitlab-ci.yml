@@ -58,5 +58,3 @@ deploy:
   image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
   script:
     - echo 'Finished deployment'
-  only:
-    - main
