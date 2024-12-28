@@ -24,7 +24,7 @@ const FriendsPage = () => {
                 }}
             />
             {
-                friends && searchedUsername &&
+                 searchedUsername &&
                 <PlayerSearchResultsList
                     friends={friends}
                     searchedUsername={searchedUsername}
