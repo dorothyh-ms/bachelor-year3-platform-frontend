@@ -5,7 +5,7 @@ import { Friend } from "../../types/Friend";
 
 interface PlayerSearchResults {
     searchedUsername: string, 
-    friends: Friend[]
+    friends: Friend[] | undefined
 }
 
 const PlayerSearchResultsList = (props: PlayerSearchResults) => {
