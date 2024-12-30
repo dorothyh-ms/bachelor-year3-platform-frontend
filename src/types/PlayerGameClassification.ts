@@ -5,5 +5,7 @@ export type PlayerGameClassification = {
     totalWins: number;
     totalLosses: number;
     classification: string;
+    totalMatchesPlayed: number;
+    totalSecondsPlayed: number
   }
 

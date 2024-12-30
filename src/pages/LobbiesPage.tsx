@@ -33,7 +33,7 @@ const Lobby = () => {
         if (lobbiesLoadError) return <Typography color="error">Failed to load lobbies.</Typography>
         return <Box sx={{width: "100%"}}>
                 {lobbies?.length ? (
-                    lobbies.map((lobby: any) => (
+                    lobbies.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()).map((lobby: any) => (
                         <LobbyCard lobby={lobby} />
                     ))
                 ) : (

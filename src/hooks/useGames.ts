@@ -1,7 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { getGames } from '../services/gamesService.ts';
+import { getGame, getGames } from '../services/gamesService.ts';
 
 
+export function useFetchGame(id : string) {
+    const {data: game, isPending, isError} = useQuery({
+        queryKey: ['game', id],
+        queryFn: () => {return getGame(id)},
+        retry: 1, // Retry once if there's an error
+        refetchOnWindowFocus: false, // Prevent refetching on window focus
+    })
+
+    return {
+        game, 
+        isPending, 
+        isError
+    }
+}
 
 // Hook for fetching lobbies
 export function useFetchGames() {
