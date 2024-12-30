@@ -1,122 +1,72 @@
-import React, { useState, useContext } from "react";
-import {
-    Card,
-    CardMedia,
-    CardContent,
-    Typography,
-    CardActions,
-    Button,
-    Chip,
-    Snackbar,
-    Alert,
-} from "@mui/material";
-import { Game } from "../../types/Game";
-import defaultGameImage from "../../assets/images/banditgames-mascot.png";
+import React, {useState} from "react";
+import {Alert, Button, Card, CardActions, CardContent, CardMedia, Chip, Snackbar, Typography,} from "@mui/material";
+import {Game} from "../../types/Game"; // Correct path to `types/Game`
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import SecurityContext from "../../context/SecurityContext";
-import { useCreateLobby } from "../../hooks/useLobbies";
-import { useAddToFavorites, useRemoveFromFavorites } from "../../hooks/useFavorites";
+import {useCreateLobby} from "../../hooks/useLobbies"; // Hook for creating lobbies
 
 interface GameCardProps {
     game: Game;
-    isFavorite?: boolean;
+    isFavorite: boolean;
+    onToggleFavorite: () => void;
 }
 
-const GameCard: React.FC<GameCardProps> = ({ game, isFavorite = false }) => {
-    const { loggedInUser } = useContext(SecurityContext); // Get the player ID from SecurityContext
-    const playerId = loggedInUser?.playerId;
-
+export const GameCard: React.FC<GameCardProps> = ({
+                                                      game,
+                                                      isFavorite,
+                                                      onToggleFavorite,
+                                                  }) => {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackbarMessage, setSnackBarMessage] = useState("");
+    const [snackbarMessage, setSnackbarMessage] = useState("");
     const [snackbarError, setSnackbarError] = useState(false);
 
-    console.log("Game ID:", game.id);
-    console.log("Game object in GameCard:", game);
-    console.log("Player ID from SecurityContext:", playerId);
-
-    const { createLobby } = useCreateLobby(() => {
-        setSnackBarMessage("Successfully created lobby");
-        setSnackBarOpen(true);
+    // Create Lobby hook
+    const {createLobby} = useCreateLobby(() => {
+        setSnackbarMessage("Successfully created lobby");
         setSnackbarError(false);
+        setSnackBarOpen(true);
     });
 
-    const addToFavoritesMutation = useAddToFavorites();
-    const removeFromFavoritesMutation = useRemoveFromFavorites();
-
-    const handleFavoriteClick = () => {
-        if (!playerId || !game.id) {
-            setSnackBarMessage("Invalid player or game data.");
-            setSnackBarOpen(true);
+    // Handle creating a new lobby
+    const handleCreateLobby = () => {
+        if (!game.id) {
+            setSnackbarMessage("Invalid game data. Unable to create lobby.");
             setSnackbarError(true);
+            setSnackBarOpen(true);
             return;
         }
-
-        if (isFavorite) {
-            removeFromFavoritesMutation.mutate(
-                { playerId, gameId: game.id },
-                {
-                    onSuccess: () => {
-                        setSnackBarMessage("Removed from Favorites");
-                        setSnackBarOpen(true);
-                        setSnackbarError(false);
-                    },
-                    onError: () => {
-                        setSnackBarMessage("Failed to remove from Favorites");
-                        setSnackBarOpen(true);
-                        setSnackbarError(true);
-                    },
-                }
-            );
-        } else {
-            addToFavoritesMutation.mutate(
-                { playerId, gameId: game.id },
-                {
-                    onSuccess: () => {
-                        setSnackBarMessage("Added to Favorites");
-                        setSnackBarOpen(true);
-                        setSnackbarError(false);
-                    },
-                    onError: () => {
-                        setSnackBarMessage("Failed to add to Favorites");
-                        setSnackBarOpen(true);
-                        setSnackbarError(true);
-                    },
-                }
-            );
-        }
+        createLobby(game.id);
     };
 
     return (
-        <Card>
+        <Card className="game-card">
             <CardMedia
                 component="img"
-                height="194"
-                image={game.image ? game.image : defaultGameImage}
+                height="140"
+                image={game.image || "default_image_url"}
                 alt={game.name}
             />
             <CardContent>
-                <Typography variant="subtitle1">{game.name}</Typography>
-                <Typography variant="body2">{game.description || "No description available"}</Typography>
-                <Chip label={game.genre ? game.genre.toLocaleLowerCase() : "Unknown genre"} />
+                <Typography variant="h5">{game.name}</Typography>
+                <Typography variant="body2">{game.description}</Typography>
+                <Chip label={game.genre || "Unknown genre"}/>
             </CardContent>
             <CardActions>
                 <Button
-                    onClick={() => createLobby(game.id)}
-                    color="secondary"
                     variant="contained"
-                    endIcon={<MeetingRoomIcon />}
+                    color="secondary"
+                    onClick={handleCreateLobby}
+                    startIcon={<MeetingRoomIcon/>}
                 >
                     New Lobby
                 </Button>
                 <Button
-                    onClick={handleFavoriteClick}
-                    color={isFavorite ? "error" : "primary"}
                     variant="outlined"
-                    startIcon={isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                    onClick={onToggleFavorite}
+                    startIcon={isFavorite ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
                 >
-                    {isFavorite ? "Remove" : "Favorite"}
+                    {isFavorite ? "Remove" : "Add"} Favorite
                 </Button>
             </CardActions>
             <Snackbar
@@ -127,7 +77,6 @@ const GameCard: React.FC<GameCardProps> = ({ game, isFavorite = false }) => {
                 <Alert
                     onClose={() => setSnackBarOpen(false)}
                     severity={snackbarError ? "error" : "success"}
-                    sx={{ width: "100%" }}
                 >
                     {snackbarMessage}
                 </Alert>
@@ -135,5 +84,3 @@ const GameCard: React.FC<GameCardProps> = ({ game, isFavorite = false }) => {
         </Card>
     );
 };
-
-export default GameCard;

@@ -1,7 +1,7 @@
-import { Game } from "../types/Game";
+import {Game} from "../types/Game";
 import api from "./axios";
 
-export async function getGames() : Promise<Game[]>   {
-    const {data: games} = await api.get<Game[]>(`/games`);
-    return games;
+export async function getGames(): Promise<Game[]> {
+    const response = await api.get<{ data: Game[] }>("/games");
+    return response.data.data;
 }

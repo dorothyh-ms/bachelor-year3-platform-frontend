@@ -1,49 +1,32 @@
-import { Box, Grid, CircularProgress, Typography } from "@mui/material";
-import { useFavorites } from "../hooks/useFavorites";
-import GameCard from "../components/GameCard/GameCard";
-import { useContext } from "react";
-import SecurityContext from "../context/SecurityContext";
+import React from "react";
+import {Box, CircularProgress, Grid, Typography} from "@mui/material";
+import {useFavorites, useRemoveFromFavorites} from "../hooks/useFavorites";
+import {GameCard} from "../components/GameCard/GameCard";
 
 const FavoritesPage = () => {
-    const { loggedInUser } = useContext(SecurityContext);
-    const playerId = loggedInUser?.playerId || "";
+    const {data: favorites, isLoading, isError} = useFavorites();
+    const {mutate: removeFavorite} = useRemoveFromFavorites();
 
-    const { data: favorites, isLoading, isError } = useFavorites(playerId);
-
-    if (isLoading) return <CircularProgress />;
-    if (isError) {
-        return (
-            <Typography color="error">
-                Failed to fetch favorite games. Try again later.
-            </Typography>
-        );
-    }
+    if (isLoading) return <CircularProgress/>;
+    if (isError)
+        return <Typography color="error">Error loading favorites</Typography>;
 
     return (
         <Box>
-            <Typography variant="h4" gutterBottom>
-                My Favorites
-            </Typography>
+            <Typography variant="h4">My Favorites</Typography>
             <Grid container spacing={2}>
-                {Array.isArray(favorites) &&
-                    favorites.map((favorite) => (
-                        <Grid item xs={12} sm={6} md={4} key={favorite.favoriteId}>
-                            <GameCard
-                                game={{
-                                    id: favorite.gameId,
-                                    name: favorite.gameName,
-                                    description: favorite.description,
-                                    genre: favorite.genre,
-                                    image: favorite.imageUrl,
-                                    price: favorite.price,
-                                    difficulty: favorite.difficultyLevel,
-                                }}
-                                isFavorite={true}
-                            />
-                        </Grid>
-                    ))}
+                {favorites?.map((favorite) => (
+                    <Grid item key={favorite.favoriteId}>
+                        <GameCard
+                            game={favorite.game}
+                            isFavorite={true}
+                            onToggleFavorite={() => removeFavorite(favorite.favoriteId)}
+                        />
+                    </Grid>
+                ))}
             </Grid>
         </Box>
     );
 };
+
 export default FavoritesPage;
