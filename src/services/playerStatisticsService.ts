@@ -2,7 +2,7 @@
 import { PlayerStatistics } from "../types/PlayerStatistics";
 import axios from "./axios";
 
-export const fetchPlayerStatistics = async (): Promise<PlayerStatistics[]> => {
+export const getPlayerStatistics = async (): Promise<PlayerStatistics[]> => {
     const response = await axios.get('/player-statistics');
     return response.data;
 };

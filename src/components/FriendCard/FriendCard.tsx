@@ -1,29 +1,22 @@
-import React from 'react';
-import { Card, CardContent, Typography, Button, Box } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
+import { Friend } from '../../types/Friend';
 
-type FriendProps = {
-    friend: {
-        id: number;
-        name: string;
-        status: string;
-        gamesPlayed: number;
-        wins: number;
-    };
-};
+interface FriendProps {
+    friend: Friend
+}
 
-const FriendCard: React.FC<FriendProps> = ({ friend }) => {
+const FriendCard = ( props: FriendProps) => {
+    const {friend} = props;
     return (
-        <Card variant="outlined" sx={{ maxWidth: 300, margin: 2 }}>
+        <Card sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: { xs: "75%", md: "50%", lg: "25%" }
+        }}>
             <CardContent>
-                <Typography variant="h6">{friend.name}</Typography>
-                <Typography color="text.secondary">Status: {friend.status}</Typography>
-                <Typography color="text.secondary">Games Played: {friend.gamesPlayed}</Typography>
-                <Typography color="text.secondary">Wins: {friend.wins}</Typography>
-                <Box display="flex" justifyContent="space-between" mt={2}>
-                    <Button variant="contained" color="primary">Invite to Game</Button>
-                    <Button variant="outlined" color="secondary">View Stats</Button>
-                </Box>
+                {friend.friendUsername}
             </CardContent>
+            
         </Card>
     );
 };

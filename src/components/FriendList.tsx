@@ -1,26 +1,34 @@
-import React from 'react';
-import FriendCard from './FriendCard/FriendCard';
-import { Grid } from '@mui/material';
-import { mockFriends } from '../utils/mockData';
+import { CircularProgress, Stack, Typography } from "@mui/material";
+import FriendCard from "./FriendCard/FriendCard";
+import { Friend } from "../types/Friend";
 
-type FriendListProps = {
-    query: string;
-};
+interface FriendsListProps {
+    friends: Friend[] | undefined,
+    isLoading: boolean,
+    isError: boolean
+}
 
-const FriendList: React.FC<FriendListProps> = ({ query }) => {
-    const filteredFriends = mockFriends.filter(friend =>
-        friend.name.toLowerCase().includes(query.toLowerCase())
-    );
+const FriendsList = (props: FriendsListProps) => {
+    const { friends, isLoading, isError } = props;
 
-    return (
-        <Grid container spacing={2}>
-            {filteredFriends.map(friend => (
-                <Grid item xs={12} sm={6} md={4} key={friend.id}>
-                    <FriendCard friend={friend} />
-                </Grid>
-            ))}
-        </Grid>
-    );
-};
+    console.log("friend", friends)
+    if (isLoading) {
+        return <CircularProgress color="secondary" />
+    }
+    if (isError) {
+        return <Typography>Your friends could not be loaded.</Typography>
+    }
 
-export default FriendList;
+    console.log("friends", friends)
+    if (friends) {
+        if (friends.length) {
+           return  <Stack gap={1}>
+                {friends.map(friend => <FriendCard friend={friend} />)}
+            </Stack>
+
+        }
+    }
+    return <Typography>You have not added any friends yet.</Typography>
+}
+
+export default FriendsList;
