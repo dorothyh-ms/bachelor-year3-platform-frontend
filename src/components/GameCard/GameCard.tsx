@@ -10,6 +10,7 @@ import {
     Button,
     SnackbarCloseReason,
     Snackbar,
+    Stack,
 } from "@mui/material";
 
 import { Game } from "../../types/Game";
@@ -32,7 +33,7 @@ const GameCard = (props: GameCardProps) => {
         setSnackBarOpen(true);
     }
     const { createLobby } = useCreateLobby(handleSuccess);
-    const [ snackbarOpen, setSnackBarOpen ] = useState<boolean>(false);
+    const [snackbarOpen, setSnackBarOpen] = useState<boolean>(false);
     const [snackbarMessage, setSnackBarMessage] = useState<string>();
     const handleClose = (
         _: React.SyntheticEvent | Event,
@@ -48,39 +49,41 @@ const GameCard = (props: GameCardProps) => {
 
     const action = (
         <>
-          <Button color="secondary" size="small" onClick={() => {
-            navigate(LOBBIES);
-          }}>
-            Go
-          </Button>
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="inherit"
-            onClick={handleClose}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
+            <Button color="secondary" size="small" onClick={() => {
+                navigate(LOBBIES);
+            }}>
+                Go
+            </Button>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
         </>
-      );
+    );
 
     return (
-        <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
+        <Card sx={{ maxWidth: 345, minHeight: {xs: "30em", lg: "28em"}, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <Stack>
+                <CardMedia
                 component="img"
                 height="194"
                 image={game.image ? game.image : defaultGameImage}
                 alt={game.name}
             />
-            <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
-                    {game.name}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {game.description}
-                </Typography>
-                <Chip label={game.genre.toLocaleLowerCase()} sx={{ width: "fit-content" }} />
-            </CardContent>
+                <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                    <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+                        {game.name}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {game.description}
+                    </Typography>
+                    <Chip label={game.genre.toLocaleLowerCase()} sx={{ width: "fit-content" }} />
+                </CardContent>
+            </Stack>
             <CardActions disableSpacing>
                 <Button
                     onClick={() => {
@@ -89,7 +92,7 @@ const GameCard = (props: GameCardProps) => {
                     color="secondary"
                     variant="contained"
                     endIcon={<MeetingRoomIcon />}
-                    sx={{ width: "fit-content" }}
+                    sx={{ width: "fit-content", m: 1 }}
                 >
                     New lobby
                 </Button>

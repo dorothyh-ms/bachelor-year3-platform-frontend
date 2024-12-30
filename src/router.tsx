@@ -34,6 +34,7 @@ const router = createBrowserRouter(
             <Route element={<RequireAuth />}>
                 <Route element={<RequireCompletedProfile />} >
                     <Route path={GAMES} element={<Games />} />
+                    {/* <Route path={GAMES+"/:gameId"} element={<GameHistoryPage />} /> */}
                     <Route path={FRIENDS} element={<Friends />} />
                     <Route path={INVITES} element={<InvitationsPage />} />
                     <Route path={LOBBIES} element={<Lobby />} />
