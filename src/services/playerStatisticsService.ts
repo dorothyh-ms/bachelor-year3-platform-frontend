@@ -21,4 +21,7 @@ export const exportPlayerStatisticsCsv = async () => {
       link.setAttribute("download", `player-statistics.csv`);
       document.body.appendChild(link);
       link.click();
+
+      //Todo:
+      // how to handle asset produced on server, where to put? ask kevin - put in the public folder of webserver serving spring boot application
 }

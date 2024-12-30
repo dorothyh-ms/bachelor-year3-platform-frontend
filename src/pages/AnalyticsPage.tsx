@@ -11,7 +11,7 @@ const AnalyticsPage = () => {
 
     return <PageLayout title="Analytics" >
         <Box sx={{ display: "flex", gap: 4, mb: 2 }}>
-            <Typography variant='h6' >Player statistics</Typography>
+            <Typography variant='h6' >Player statistics by game</Typography>
             <Button 
             startIcon={<FileDownloadIcon />}
             onClick={()  => {handleStatisticsCsvDownload()}} 
