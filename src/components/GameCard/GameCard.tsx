@@ -45,12 +45,12 @@ export const GameCard: React.FC<GameCardProps> = ({
                 component="img"
                 height="140"
                 image={game.image || "default_image_url"}
-                alt={game.name}
+                alt={game.name || "Game"}
             />
             <CardContent>
-                <Typography variant="h5">{game.name}</Typography>
-                <Typography variant="body2">{game.description}</Typography>
-                <Chip label={game.genre || "Unknown genre"}/>
+                <Typography variant="h5">{game.name || "Unknown Game"}</Typography>
+                <Typography variant="body2">{game.description || "No description available."}</Typography>
+                <Chip label={game.genre || "Unknown Genre"}/>
             </CardContent>
             <CardActions>
                 <Button

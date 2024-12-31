@@ -10,8 +10,9 @@ export function useFetchGames() {
     });
 
     return {
-        games: data || [], // Default to an empty array if data is undefined
+        data: data || [],
         isLoading,
         isError: !!error,
     };
 }
+

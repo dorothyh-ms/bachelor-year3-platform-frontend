@@ -11,17 +11,23 @@ const FavoritesPage = () => {
     if (isError)
         return <Typography color="error">Error loading favorites</Typography>;
 
+    console.log("Favorites Data:", favorites);
+
     return (
         <Box>
             <Typography variant="h4">My Favorites</Typography>
             <Grid container spacing={2}>
                 {favorites?.map((favorite) => (
                     <Grid item key={favorite.favoriteId}>
-                        <GameCard
-                            game={favorite.game}
-                            isFavorite={true}
-                            onToggleFavorite={() => removeFavorite(favorite.favoriteId)}
-                        />
+                        {favorite.game ? (
+                            <GameCard
+                                game={favorite.game}
+                                isFavorite={true}
+                                onToggleFavorite={() => removeFavorite(favorite.favoriteId)}
+                            />
+                        ) : (
+                            <Typography color="error">Invalid favorite data</Typography>
+                        )}
                     </Grid>
                 ))}
             </Grid>

@@ -21,8 +21,8 @@ const Games = () => {
             )}
             {games && (
                 <Grid container spacing={2}>
-                    {games.map((game) => (
-                        <Grid item xs={12} sm={6} md={4} key={game.id}>
+                    {games.map((game, index) => (
+                        <Grid item xs={12} sm={6} md={4} key={game.id || `game-${index}`}>
                             <GameCard
                                 game={game}
                                 isFavorite={false}
