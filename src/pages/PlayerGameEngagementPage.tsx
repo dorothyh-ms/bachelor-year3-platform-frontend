@@ -1,7 +1,7 @@
 import PageLayout from "../layouts/PageLayout";
 import PlayerGameEngagementLineChart from "../components/PlayerGameEngagementChart/PlayerGameEngagementChart";
 import { usePlayerGameEngagementPredictions } from "../hooks/usePlayerGameEngagementPredictions";
-import { Paper, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import { useLocation } from "react-router-dom";
 
 const PlayerEngagementPredictionPage = () => {
