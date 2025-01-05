@@ -7,5 +7,5 @@ export const PROFILE = '/profile'
 export const LOBBIES = '/lobbies'
 export const ANALYTICS = '/analytics'
 export const ADD_GAME = '/add-game';
-
+export const ENGAGEMENT_PREDICTIONS = '/engagement-predictions';
 export const SUBMIT_GAME_APPLICATION = '/games/new'

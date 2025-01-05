@@ -29,7 +29,7 @@ export interface NavigationLink {
 const MainLayout = () => {
     const drawerWidth = 240;
     const {loggedInUser, login} = useContext(SecurityContext);
-    console.log(loggedInUser)
+   
     const navigate = useNavigate();
 
     const drawerLinks: NavigationLink[] = [

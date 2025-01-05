@@ -9,7 +9,7 @@ const RecommendationCard = (props: RecommendationCardProps) => {
 
     const { recommendation } = props;
     const { game } = useFetchGame(recommendation.id);
-    console.log("game", game)
+
     if (!game) {
         return null;
     }

@@ -1,8 +1,9 @@
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef  } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { usePlayerStatistics } from '../../hooks/usePlayerStatistics';
 import dayjs from 'dayjs';
 import formatSeconds from '../../utils/formatSeconds';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -27,7 +28,7 @@ const columns: GridColDef[] = [
         },
     },
 
-  {
+    {
         field: 'city',
         headerName: 'City',
         display: "flex",
@@ -50,7 +51,7 @@ const columns: GridColDef[] = [
         type: 'number',
         display: "flex",
         width: 240,
-        valueGetter: (value : number) => `${formatSeconds(value)}`,
+        valueGetter: (value: number) => `${formatSeconds(value)}`,
     },
     {
         field: 'wins',
@@ -66,6 +67,7 @@ const columns: GridColDef[] = [
 
 
 const PlayersTable = () => {
+    const navigate = useNavigate();
     const { playerStatistics: rows, isLoading } = usePlayerStatistics();
 
     const rowsWithId = rows?.map((row, index) => ({
@@ -73,13 +75,28 @@ const PlayersTable = () => {
         internalId: index,
     }));
 
+    const handleEvent: GridEventListener<'rowClick'> = (
+        params, // GridRowParams
+
+    ) => {
+        navigate(`/engagement-predictions?username=${params.row.playerName}&game_name=${params.row.gameTitle}`)
+    };
+
     return (
         <Box sx={{ height: 400, width: 'fit-content' }}>
             <DataGrid
                 getRowId={(row) => row.internalId}
-                sx={{ backgroundColor: "background.default", width: "fit-content" }}
+                sx={{
+                    backgroundColor: "background.default",
+                    width: "fit-content",
+                    // pointer cursor on ALL rows
+                    '& .MuiDataGrid-row:hover': {
+                        cursor: 'pointer'
+                    }
+                }}
                 rows={rowsWithId}
                 columns={columns}
+                onRowClick={handleEvent}
 
 
                 initialState={{
