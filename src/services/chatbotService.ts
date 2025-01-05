@@ -5,7 +5,7 @@ export type chatbotRequestArgs = {
     game: string
 }
 
-export async function getAnswerForQuestion(body: chatbotRequestArgs): Promise<String> {
+export async function getAnswerForQuestion(body: chatbotRequestArgs): Promise<string> {
     const { data: answer } = await axios.post(
         "/chatbot/question",
         body, 
@@ -16,5 +16,6 @@ export async function getAnswerForQuestion(body: chatbotRequestArgs): Promise<St
             },
         }
     )
-    return answer
+    console.log("answer", answer.answer)
+    return answer.answer
 }

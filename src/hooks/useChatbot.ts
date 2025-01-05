@@ -1,11 +1,13 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getAnswerForQuestion } from "../services/chatbotService";
 
-export function useChatbot() {
-    const queryClient = useQueryClient();
+export function useChatbot(customOnSuccess?: (data : string) => void) {
 
     const {mutate, isPending, isError} =  useMutation({
         mutationFn: getAnswerForQuestion,
+        onSuccess: (data : string) => {
+            customOnSuccess && customOnSuccess(data);
+        }
        
     });
 

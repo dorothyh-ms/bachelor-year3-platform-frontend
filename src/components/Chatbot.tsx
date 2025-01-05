@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import useFetchChatbotAnswer, { useChatbot } from "../hooks/useChatbot.ts";
+import { useChatbot } from "../hooks/useChatbot.ts";
+import { useFetchGames } from "../hooks/useGames.ts";
 import {
     Box,
     Typography,
@@ -8,42 +9,100 @@ import {
     Button,
     Paper,
     CircularProgress,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel,
 } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CloseIcon from "@mui/icons-material/Close";
 
-
-type ChatMessage =  {
+type ChatMessage = {
     text: string;
-    sender: "player" | "chatbot"
-}
+    sender: "player" | "chatbot";
+};
+
+
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [playerQuestion, setPlayerQuestion] = useState<string>();
     const [chatbotResponse, setChatbotResponse] = useState<string>();
+    const [selectedSubject, setSelectedSubject] = useState<string>("platform");
+    const [chatSubjectOptions, setChatSubjectOptions] = useState<string[]>([]);
 
-    const { queryChatbot, isLoading, isError } = useChatbot();
+    // Fetch games using the useFetchGames hook
+    const { games } = useFetchGames();
+
+
+
+    useEffect(() => {
+        if (games && games.length) {
+            setChatSubjectOptions([
+                "platform",
+                ...games.map(game => game.name)
+            ])
+        }
+
+
+    }, [games])
+
+    const handleSuccessfulChatbotResponse = (response: string) => {
+        setChatbotResponse(response);
+    };
+
+    const { queryChatbot, isLoading, isError } = useChatbot(handleSuccessfulChatbotResponse);
+
+    useEffect(() => {
+        if (chatbotResponse) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    text: chatbotResponse,
+                    sender: "chatbot",
+                },
+            ]);
+        }
+    }, [chatbotResponse]);
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
+
     };
 
     const sendMessage = () => {
-        const answer = queryChatbot(
-            {
-                "question" : input,
-                "game" : "Battleship"
-            }
-        )
-        setChatbotResponse(answer);
-    }
+        if (!selectedSubject) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    text: "Please select a game before asking a question.",
+                    sender: "chatbot",
+                },
+            ]);
+            return;
+        }
+
+        setPlayerQuestion(input);
+        queryChatbot({
+            question: input,
+            game: selectedSubject, // Include the selected game in the query
+        });
+        setInput("");
+    };
 
     useEffect(() => {
-
-    }, [])
-
+        if (playerQuestion) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    text: playerQuestion,
+                    sender: "player",
+                },
+            ]);
+        }
+    }, [playerQuestion]);
 
     return (
         <Box
@@ -76,6 +135,26 @@ const Chatbot = () => {
 
                 {isOpen && (
                     <Box sx={{ p: 2 }}>
+                        {/* Dropdown for Game Selection */}
+                        <FormControl fullWidth sx={{ mb: 2 }}>
+                            <InputLabel id="game-select-label">Select chat subject</InputLabel>
+                            <Select
+                                labelId="game-select-label"
+                                value={selectedSubject}
+                                onChange={(e) => setSelectedSubject(e.target.value)}
+                                displayEmpty
+                            >
+                                <MenuItem value="" disabled>
+                                    Select the subject of your question
+                                </MenuItem>
+                                {chatSubjectOptions.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                        {option[0].toUpperCase() + option.substring(1).toLowerCase()}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
                         <Box
                             sx={{
                                 maxHeight: 300,
@@ -86,13 +165,27 @@ const Chatbot = () => {
                                 gap: 1,
                             }}
                         >
+                            {isError &&
+                                <Box
+                                    
+                                    sx={{
+                                        alignSelf:"flex-start",
+                                        bgcolor: "error.light",
+                                        color: "black",
+                                        p: 1,
+                                        borderRadius: 1,
+                                        maxWidth: "80%",
+                                    }}
+                                >
+                                    Chatbot response could not be loaded. Please try again later.
+                                </Box>}
                             {messages.map((msg, index) => (
                                 <Box
                                     key={index}
                                     sx={{
-                                        alignSelf: msg.user ? "flex-end" : "flex-start",
-                                        bgcolor: msg.user ? "primary.light" : "grey.300",
-                                        color: msg.user ? "primary.contrastText" : "text.primary",
+                                        alignSelf: msg.sender === "player" ? "flex-end" : "flex-start",
+                                        bgcolor: msg.sender === "player" ? "primary.light" : "grey.300",
+                                        color: msg.sender === "player" ? "primary.contrastText" : "black",
                                         p: 1,
                                         borderRadius: 1,
                                         maxWidth: "80%",
