@@ -1,15 +1,17 @@
-import { Box, Button, Card, CardContent, Typography } from "@mui/material"
-import Invite from "../../types/Invite";
+import { Box, Button, Card, CardContent, Typography } from "@mui/material";
+import { Invite } from "../../types/Invite";
 import formatDate from "../../utils/formatDate";
-import dayjs from 'dayjs'
+import dayjs from 'dayjs';
+import { useAcceptInvite } from "../../hooks/useInvites";
 interface InviteCardProps {
     invite: Invite
 }
 const InviteCard = (props: InviteCardProps) => {
     const {invite} = props;
-  
+    const {acceptInvite}  = useAcceptInvite();
 
-    return <Card sx={{ boxShadow: 2 }}>
+
+    return <Card sx={{ boxShadow: 2, width: { xs: "32rem", xl: "48rem" } }} >
     <CardContent>
         
         <Typography variant="body2" color="text.secondary">
@@ -21,12 +23,15 @@ const InviteCard = (props: InviteCardProps) => {
        
         {invite.inviteStatus === 'OPEN' && (
             <Box sx={{ display: 'flex', gap: 1, marginTop: 2 }}>
-                <Button variant="contained" color="secondary" size="small">
+                <Button variant="contained" color="secondary" size="small"
+                onClick={() => {acceptInvite({
+                    inviteId : invite.id,
+                    action : "ACCEPT"
+                })} }
+                >
                     Accept
                 </Button>
-                <Button variant="outlined" color="error" size="small">
-                    Decline
-                </Button>
+               
             </Box>
         )}
     </CardContent>

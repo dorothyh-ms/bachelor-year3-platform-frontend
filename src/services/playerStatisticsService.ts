@@ -2,7 +2,7 @@
 import { PlayerStatistics } from "../types/PlayerStatistics";
 import axios from "./axios";
 
-export const fetchPlayerStatistics = async (): Promise<PlayerStatistics[]> => {
+export const getPlayerStatistics = async (): Promise<PlayerStatistics[]> => {
     const response = await axios.get('/player-statistics');
     return response.data;
 };
@@ -21,4 +21,7 @@ export const exportPlayerStatisticsCsv = async () => {
       link.setAttribute("download", `player-statistics.csv`);
       document.body.appendChild(link);
       link.click();
+
+      //Todo:
+      // how to handle asset produced on server, where to put? ask kevin - put in the public folder of webserver serving spring boot application
 }

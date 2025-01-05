@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchPlayerStatistics } from '../services/playerStatisticsService';
+import { getPlayerStatistics } from '../services/playerStatisticsService';
 
 
 export function usePlayerStatistics() {
     const {data: playerStatistics, isPending, isError}= useQuery({
         queryKey: ['player-statistics'],
-        queryFn: fetchPlayerStatistics,
+        queryFn: getPlayerStatistics,
         retry: 1,
         refetchOnWindowFocus: false,
     });
