@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import NavigationTab from "../components/NavLink/NavLink";
+import Chatbot from "../components/Chatbot.tsx";
 
 
 export interface NavigationLink {
@@ -181,6 +182,7 @@ if (loggedInUser){
                 >
                    <Outlet />
                 </Box>
+        <Chatbot></Chatbot>
             </Box>
 }
 
