@@ -14,7 +14,7 @@ const Home = () => {
     const { loggedInUser } = useContext(SecurityContext);
     const { classifications, isLoading: classificationsLoading, isError: classificationsError } = useFetchPlayerGameClassifications();
     const { recommendations, isLoading: recommendationsLoading, isError: recommendationsError } = useGameRecommendations();
-    console.log(recommendations)
+  
     const renderGameClassifications = () => {
         if (classificationsLoading) return <CircularProgress color="secondary" />;
         if (classificationsError) return <Typography>Your classifications could not be loaded.</Typography>;

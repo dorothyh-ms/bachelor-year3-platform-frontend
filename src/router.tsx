@@ -19,10 +19,12 @@ import {
     LOBBIES,
     STORE,
     SUBMIT_GAME_APPLICATION,
+    ENGAGEMENT_PREDICTIONS
 } from "./constants/routes";
 import RequireCompletedProfile from "./components/RequireCompletedProfile/RequireCompletedProfile";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AddGamePage from "./pages/AddGamePage";
+import PlayerEngagementPredictionPage from "./pages/PlayerGameEngagementPage";
 
 
 
@@ -39,6 +41,7 @@ const router = createBrowserRouter(
                     <Route path={INVITES} element={<InvitationsPage />} />
                     <Route path={LOBBIES} element={<Lobby />} />
                     <Route path={ANALYTICS} element={<AnalyticsPage />} />
+                    <Route path={ENGAGEMENT_PREDICTIONS} element={<PlayerEngagementPredictionPage />} />
                     <Route path="/favorites" element={<FavoritesPage />} />
                 </Route>
                 <Route path={SUBMIT_GAME_APPLICATION} element={<AddGamePage />} />

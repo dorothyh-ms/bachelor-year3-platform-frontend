@@ -34,7 +34,7 @@ export default function SecurityContextProvider({children}: IWithChildren) {
     keycloak.onAuthSuccess = () => {
         addAccessTokenToAuthHeader(keycloak.token)
         if(keycloak.idTokenParsed){
-            console.log(keycloak)
+           
         setLoggedInUser({
             playerId: keycloak.idTokenParsed.sub ?? "",
             username: keycloak.idTokenParsed.given_name,
