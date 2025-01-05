@@ -1,105 +1,130 @@
-import "../App.css";
-import React, { useState, useEffect } from 'react';
-import useFetchChatbotAnswer from "../hooks/useFetchAnswer.ts";
+import { useState, useEffect } from "react";
+import useFetchChatbotAnswer, { useChatbot } from "../hooks/useChatbot.ts";
+import {
+    Box,
+    Typography,
+    IconButton,
+    TextField,
+    Button,
+    Paper,
+    CircularProgress,
+} from "@mui/material";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
+import CloseIcon from "@mui/icons-material/Close";
+
+
+type ChatMessage =  {
+    text: string;
+    sender: "player" | "chatbot"
+}
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [input, setInput] = useState('');
-    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [chatbotResponse, setChatbotResponse] = useState<string>();
 
-    const { loading, response, error, postRequest } = useFetchChatbotAnswer(
-        input.trim(),  // Replace with your API endpoint
-        'platform'  // Send the input message
-    );
+    const { queryChatbot, isLoading, isError } = useChatbot();
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
     };
 
-    const sendMessage = async () => {
-
-        if (!input.trim()) return; // Do nothing if the input is empty
-
-        setInput("");
-        // Add the user's message to the chat
-        setMessages((prevMessages) => [
-            ...prevMessages,
-            { user: true, text: input },
-        ]);
-
-        try {
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { user: false, text: "Bot is typing..." },
-            ]);
-            // Trigger the postRequest to send the message
-            await postRequest();
-
-            // If there's an error, add an error message to the chat
-            if (error) {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    { user: false, text: `Error: ${error}` },
-                ]);
+    const sendMessage = () => {
+        const answer = queryChatbot(
+            {
+                "question" : input,
+                "game" : "Battleship"
             }
-        } catch (err) {
-            // Handle unexpected errors
-            console.error('Error sending message:', err);
-            setMessages((prevMessages) => [
-                ...prevMessages,
-                { user: false, text: 'An error occurred. Please try again later.' },
-            ]);
-        } finally {
-            // Clear the input field after sending the message
-            setInput('');
-        }
-    };
+        )
+        setChatbotResponse(answer);
+    }
 
-    // Handle response updates using useEffect
     useEffect(() => {
-        if (response) {
-            setMessages((prevMessages) => {
-                // Remove the "Bot is typing..." message (last message)
-                const updatedMessages = prevMessages.slice(0, -1);
 
-                // Add the actual bot response
-                return [
-                    ...updatedMessages,
-                    { user: false, text: response.answer }, // Assuming API returns { answer: 'Bot reply' }
-                ];
-            });
-        }
-    }, [response]); // Runs when `response` changes
+    }, [])
+
 
     return (
-        <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>
-            <div className="chatbot-header" onClick={toggleChat}>
-                <h4>Chat with us!</h4>
-            </div>
-            {isOpen && (
-                <div className="chatbot-body">
-                    <div className="chatbot-messages">
-                        {messages.map((msg, index) => (
-                            <div
-                                key={index}
-                                className={`chatbot-message ${msg.user ? 'user-message' : 'bot-message'}`}
+        <Box
+            sx={{
+                position: "fixed",
+                bottom: 16,
+                right: 16,
+                width: isOpen ? 300 : "auto",
+                zIndex: 1000,
+            }}
+        >
+            <Paper elevation={3} sx={{ borderRadius: 2, overflow: "hidden" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        p: 2,
+                        bgcolor: "primary.main",
+                        color: "primary.contrastText",
+                        cursor: "pointer",
+                    }}
+                    onClick={toggleChat}
+                >
+                    <Typography variant="h6">Chat with us!</Typography>
+                    <IconButton color="inherit">
+                        {isOpen ? <CloseIcon /> : <ChatBubbleOutlineIcon />}
+                    </IconButton>
+                </Box>
+
+                {isOpen && (
+                    <Box sx={{ p: 2 }}>
+                        <Box
+                            sx={{
+                                maxHeight: 300,
+                                overflowY: "auto",
+                                mb: 2,
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                            }}
+                        >
+                            {messages.map((msg, index) => (
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        alignSelf: msg.user ? "flex-end" : "flex-start",
+                                        bgcolor: msg.user ? "primary.light" : "grey.300",
+                                        color: msg.user ? "primary.contrastText" : "text.primary",
+                                        p: 1,
+                                        borderRadius: 1,
+                                        maxWidth: "80%",
+                                    }}
+                                >
+                                    {msg.text}
+                                </Box>
+                            ))}
+                        </Box>
+
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                            <TextField
+                                variant="outlined"
+                                size="small"
+                                fullWidth
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                placeholder="Type your message..."
+                            />
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={sendMessage}
+                                disabled={isLoading}
                             >
-                                {msg.text}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="chatbot-input">
-                        <input
-                            type="text"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Type your message..."
-                        />
-                        <button onClick={sendMessage} disabled={loading}>Send</button>
-                    </div>
-                </div>
-            )}
-        </div>
+                                {isLoading ? <CircularProgress size={24} /> : "Send"}
+                            </Button>
+                        </Box>
+                    </Box>
+                )}
+            </Paper>
+        </Box>
     );
 };
 
