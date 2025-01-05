@@ -27,8 +27,9 @@ export function useAcceptInvite() {
         mutationFn: acceptInvite,
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['invites'] });
+            console.log(data);
             if (data.lobby.matchURL) {
-                console.log("opening new tab")
+             
                 const newWindow = window.open(data.lobby.matchURL, '_blank', 'noopener,noreferrer')
                 if (newWindow) newWindow.opener = null
             }
