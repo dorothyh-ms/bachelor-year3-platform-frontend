@@ -1,7 +1,7 @@
 import React from "react";
 import {Alert, Box, CircularProgress, Grid} from "@mui/material";
 import PageLayout from "../layouts/PageLayout";
-import {GameCard} from "../components/GameCard/GameCard";
+import GameCard from "../components/GameCard/GameCard";
 import {useFetchGames} from "../hooks/useGames";
 import {useAddToFavorites} from "../hooks/useFavorites";
 
@@ -17,7 +17,9 @@ const Games = () => {
                 </Box>
             )}
             {isError && (
-                <Alert severity="error">Failed to load games. Please try again later.</Alert>
+                <Alert severity="error">
+                    Failed to load games. Please try again later.
+                </Alert>
             )}
             {games && (
                 <Grid container spacing={2}>

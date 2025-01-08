@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, CircularProgress, Grid, Typography} from "@mui/material";
 import {useFavorites, useRemoveFromFavorites} from "../hooks/useFavorites";
-import {GameCard} from "../components/GameCard/GameCard";
+import GameCard from "../components/GameCard/GameCard";
 
 const FavoritesPage = () => {
     const {data: favorites, isLoading, isError} = useFavorites();
@@ -10,8 +10,6 @@ const FavoritesPage = () => {
     if (isLoading) return <CircularProgress/>;
     if (isError)
         return <Typography color="error">Error loading favorites</Typography>;
-
-    console.log("Favorites Data:", favorites);
 
     return (
         <Box>
