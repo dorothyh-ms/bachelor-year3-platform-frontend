@@ -1,5 +1,5 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
-import PageLayout from "../layouts/PageLayout"
+import { Box, Button, Typography } from "@mui/material";
+import PageLayout from "../layouts/PageLayout";
 import PlayersTable from "../components/PlayerStatisticsTable/PlayersTable";
 
 
@@ -11,10 +11,10 @@ const AnalyticsPage = () => {
 
     return <PageLayout title="Analytics" >
         <Box sx={{ display: "flex", gap: 4, mb: 2 }}>
-            <Typography variant='h6' >Player statistics</Typography>
+            <Typography variant='h6' >Player statistics by game</Typography>
             <Button 
             startIcon={<FileDownloadIcon />}
-            onClick={handleStatisticsCsvDownload} 
+            onClick={()  => {handleStatisticsCsvDownload()}} 
             variant="contained"
             color='secondary'
             >Export</Button>

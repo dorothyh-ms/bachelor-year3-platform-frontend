@@ -1,27 +1,11 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { usePlayerStatistics } from '../../hooks/usePlayerStatistics';
-import { PlayerStatistics } from '../../types/PlayerStatistics';
 import dayjs from 'dayjs';
-import duration from "dayjs/plugin/duration";
-import { playerProfiles } from '../../services/recordLoginService';
-import DATA_GRID_STYLE from '../../theme/dataGridStyle';
-
-dayjs.extend(duration);
+import formatSeconds from '../../utils/formatSeconds';
+import { useNavigate } from 'react-router-dom';
 
 
-
-function formatSeconds(seconds: number) {
-    const time = dayjs.duration(seconds, "seconds");
-    const hours = time.hours();
-    const minutes = time.minutes();
-
-    if (hours > 0) {
-        return `${hours} hours ${minutes} minutes`;
-    }
-    return `${minutes} minutes`;
-}
 
 const columns: GridColDef[] = [
 
@@ -37,14 +21,14 @@ const columns: GridColDef[] = [
         headerName: 'Age',
         display: "flex",
         width: 120,
-        valueGetter: (value, row) => {
+        valueGetter: (value: string) => {
             const today = dayjs(); // Get today's date
             const dob = dayjs(value); // Parse the date of birth string
             return `${today.diff(dob, 'year')}`; // Calculate the age in years
         },
     },
 
-  {
+    {
         field: 'city',
         headerName: 'City',
         display: "flex",
@@ -63,11 +47,11 @@ const columns: GridColDef[] = [
     },
     {
         field: 'totalTimeSpent',
-        headerName: 'Time spent',
+        headerName: 'Total time spent',
         type: 'number',
         display: "flex",
         width: 240,
-        valueGetter: (value, row) => `${formatSeconds(value)}`,
+        valueGetter: (value: number) => `${formatSeconds(value)}`,
     },
     {
         field: 'wins',
@@ -83,20 +67,36 @@ const columns: GridColDef[] = [
 
 
 const PlayersTable = () => {
+    const navigate = useNavigate();
     const { playerStatistics: rows, isLoading } = usePlayerStatistics();
-    console.log(rows)
+
     const rowsWithId = rows?.map((row, index) => ({
         ...row,
         internalId: index,
     }));
 
+    const handleEvent: GridEventListener<'rowClick'> = (
+        params, // GridRowParams
+
+    ) => {
+        navigate(`/engagement-predictions?username=${params.row.playerName}&game_name=${params.row.gameTitle}`)
+    };
+
     return (
         <Box sx={{ height: 400, width: 'fit-content' }}>
             <DataGrid
                 getRowId={(row) => row.internalId}
-                sx={{ backgroundColor: "background.default", width: "fit-content" }}
+                sx={{
+                    backgroundColor: "background.default",
+                    width: "fit-content",
+                    // pointer cursor on ALL rows
+                    '& .MuiDataGrid-row:hover': {
+                        cursor: 'pointer'
+                    }
+                }}
                 rows={rowsWithId}
                 columns={columns}
+                onRowClick={handleEvent}
 
 
                 initialState={{

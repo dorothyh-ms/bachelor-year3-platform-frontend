@@ -1,103 +1,76 @@
-import { useState, useEffect, ReactNode } from "react";
-import Keycloak from "keycloak-js";
-import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from "../services/auth";
-import { isExpired } from "react-jwt";
-import SecurityContext from "./SecurityContext";
-import { useRecordLogin } from "../hooks/useRecordLogin";
-import User from "../types/User";
-
+import  {  useState, useEffect, ReactNode } from 'react';
+import Keycloak from 'keycloak-js'
+import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from '../services/auth';
+import {isExpired} from 'react-jwt';
+import SecurityContext from "./SecurityContext"
+import { useRecordLogin } from '../hooks/useRecordLogin';
+import User from '../types/User';
 interface IWithChildren {
-    children: ReactNode;
+    children: ReactNode
 }
 
 const keycloakConfig = {
     url: import.meta.env.VITE_KC_URL,
     realm: import.meta.env.VITE_KC_REALM,
     clientId: import.meta.env.VITE_KC_CLIENT_ID,
-};
+}
 
-const keycloak: Keycloak = new Keycloak(keycloakConfig);
+const keycloak: Keycloak = new Keycloak(keycloakConfig)
 
-export default function SecurityContextProvider({ children }: IWithChildren) {
-    const { recordLogin } = useRecordLogin();
+
+export default function SecurityContextProvider({children}: IWithChildren) {
+    const {recordLogin} = useRecordLogin();
     const [loggedInUser, setLoggedInUser] = useState<User | undefined>(undefined);
 
     useEffect(() => {
-        keycloak
-            .init({ onLoad: "login-required", checkLoginIframe: false })
-            .then((authenticated) => {
-                if (authenticated) {
-                    addAccessTokenToAuthHeader(keycloak.token);
-                    if (keycloak.tokenParsed && keycloak.idTokenParsed) {
-                        recordLogin();
-                        setLoggedInUser({
-                            playerId: keycloak.tokenParsed.sub, // Assuming `sub` represents the user ID
-                            username: keycloak.idTokenParsed.preferred_username || "",
-                            email: keycloak.idTokenParsed.email || "",
-                            roles: keycloak.tokenParsed.realm_access?.roles || [],
-                        });
-                    }
-                }
-            })
-            .catch((err) => {
-                console.error("Failed to initialize Keycloak:", err);
-            });
-    }, []);
+
+        keycloak.init({onLoad: 'login-required'}).then((authenticated) => {
+            if (authenticated){
+                recordLogin();
+            }
+        })
+    }, [])
 
     keycloak.onAuthSuccess = () => {
-        addAccessTokenToAuthHeader(keycloak.token);
-        if (keycloak.idTokenParsed) {
-            setLoggedInUser({
-                playerId: keycloak.tokenParsed?.sub || "", // Assuming `sub` represents the user ID
-                username: keycloak.idTokenParsed.preferred_username || "",
-                email: keycloak.idTokenParsed.email || "",
-                roles: keycloak.tokenParsed.realm_access?.roles || [],
-            });
-        }
-    };
+        addAccessTokenToAuthHeader(keycloak.token)
+        if(keycloak.idTokenParsed){
+           
+        setLoggedInUser({
+            playerId: keycloak.idTokenParsed.sub ?? "",
+            username: keycloak.idTokenParsed.given_name,
+            roles : keycloak.tokenParsed?.realm_access?.roles ?? []
+        });
+       
+    }
+    }
 
     keycloak.onAuthLogout = () => {
-        removeAccessTokenFromAuthHeader();
-        setLoggedInUser(undefined);
-    };
+        removeAccessTokenFromAuthHeader()
+    }
 
     keycloak.onAuthError = () => {
-        removeAccessTokenFromAuthHeader();
-        setLoggedInUser(undefined);
-    };
+        removeAccessTokenFromAuthHeader()
+    }
 
     keycloak.onTokenExpired = () => {
-        keycloak
-            .updateToken(-1)
-            .then(() => {
-                addAccessTokenToAuthHeader(keycloak.token);
-                if (keycloak.idTokenParsed) {
-                    setLoggedInUser({
-                        playerId: keycloak.tokenParsed?.sub || "", // Assuming `sub` represents the user ID
-                        username: keycloak.idTokenParsed.preferred_username || "",
-                        email: keycloak.idTokenParsed.email || "",
-                        roles: keycloak.tokenParsed.realm_access?.roles || [],
-                    });
-                }
-            })
-            .catch(() => {
-                removeAccessTokenFromAuthHeader();
-                setLoggedInUser(undefined);
-            });
-    };
+        keycloak.updateToken(-1).then(function () {
+            addAccessTokenToAuthHeader(keycloak.token)
+            setLoggedInUser(keycloak.idTokenParsed?.given_name)
+        })
+    }
 
     function login() {
-        keycloak.login();
+        keycloak.login()
     }
 
     function logout() {
-        const logoutOptions = { redirectUri: import.meta.env.VITE_REACT_APP_URL };
-        keycloak.logout(logoutOptions);
+        const logoutOptions = {redirectUri: import.meta.env.VITE_REACT_APP_URL}
+        keycloak.logout(logoutOptions)
     }
 
     function isAuthenticated() {
-        if (keycloak.token) return !isExpired(keycloak.token);
-        return false;
+        if (keycloak.token) return !isExpired(keycloak.token)
+        else return false
     }
 
     return (
@@ -112,4 +85,6 @@ export default function SecurityContextProvider({ children }: IWithChildren) {
             {children}
         </SecurityContext.Provider>
     );
-}
+};
+
+

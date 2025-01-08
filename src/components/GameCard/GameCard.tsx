@@ -1,86 +1,111 @@
-import React, {useState} from "react";
-import {Alert, Button, Card, CardActions, CardContent, CardMedia, Chip, Snackbar, Typography,} from "@mui/material";
-import {Game} from "../../types/Game"; // Correct path to `types/Game`
-import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import {useCreateLobby} from "../../hooks/useLobbies"; // Hook for creating lobbies
+
+import {
+    Card,
+    IconButton,
+    CardMedia,
+    CardContent,
+    Typography,
+    CardActions,
+    Chip,
+    Button,
+    SnackbarCloseReason,
+    Snackbar,
+    Stack,
+} from "@mui/material";
+
+import { Game } from "../../types/Game";
+import defaultGameImage from '../../assets/images/banditgames-mascot.png';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import { useCreateLobby } from "../../hooks/useLobbies";
+import { useState } from "react";
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from "react-router-dom";
+import { LOBBIES } from "../../constants/routes";
 
 interface GameCardProps {
-    game: Game;
-    isFavorite: boolean;
-    onToggleFavorite: () => void;
+    game: Game
 }
-
-export const GameCard: React.FC<GameCardProps> = ({
-                                                      game,
-                                                      isFavorite,
-                                                      onToggleFavorite,
-                                                  }) => {
-    const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarError, setSnackbarError] = useState(false);
-
-    // Create Lobby hook
-    const {createLobby} = useCreateLobby(() => {
-        setSnackbarMessage("Successfully created lobby");
-        setSnackbarError(false);
+const GameCard = (props: GameCardProps) => {
+    const navigate = useNavigate();
+    const { game } = props;
+    const handleSuccess = () => {
+        setSnackBarMessage("Successfully created lobby");
         setSnackBarOpen(true);
-    });
-
-    // Handle creating a new lobby
-    const handleCreateLobby = () => {
-        if (!game.id) {
-            setSnackbarMessage("Invalid game data. Unable to create lobby.");
-            setSnackbarError(true);
-            setSnackBarOpen(true);
+    }
+    const { createLobby } = useCreateLobby(handleSuccess);
+    const [snackbarOpen, setSnackBarOpen] = useState<boolean>(false);
+    const [snackbarMessage, setSnackBarMessage] = useState<string>();
+    const handleClose = (
+        _: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (reason === 'clickaway') {
             return;
         }
-        createLobby(game.id);
+        setSnackBarOpen(false);
     };
 
+
+
+    const action = (
+        <>
+            <Button color="secondary" size="small" onClick={() => {
+                navigate(LOBBIES);
+            }}>
+                Go
+            </Button>
+            <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleClose}
+            >
+                <CloseIcon fontSize="small" />
+            </IconButton>
+        </>
+    );
+
     return (
-        <Card className="game-card">
-            <CardMedia
+        <Card sx={{ maxWidth: 345, minHeight: {xs: "30em", lg: "28em"}, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <Stack>
+                <CardMedia
                 component="img"
-                height="140"
-                image={game.image || "default_image_url"}
-                alt={game.name || "Game"}
+                height="194"
+                image={game.image ? game.image : defaultGameImage}
+                alt={game.name}
             />
-            <CardContent>
-                <Typography variant="h5">{game.name || "Unknown Game"}</Typography>
-                <Typography variant="body2">{game.description || "No description available."}</Typography>
-                <Chip label={game.genre || "Unknown Genre"}/>
-            </CardContent>
-            <CardActions>
+                <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                    <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+                        {game.name}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                        {game.description}
+                    </Typography>
+                    <Chip label={game.genre.toLocaleLowerCase()} sx={{ width: "fit-content" }} />
+                </CardContent>
+            </Stack>
+            <CardActions disableSpacing>
                 <Button
-                    variant="contained"
+                    onClick={() => {
+                        createLobby(game.id)
+                    }}
                     color="secondary"
-                    onClick={handleCreateLobby}
-                    startIcon={<MeetingRoomIcon/>}
+                    variant="contained"
+                    endIcon={<MeetingRoomIcon />}
+                    sx={{ width: "fit-content", m: 1 }}
                 >
-                    New Lobby
-                </Button>
-                <Button
-                    variant="outlined"
-                    onClick={onToggleFavorite}
-                    startIcon={isFavorite ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
-                >
-                    {isFavorite ? "Remove" : "Add"} Favorite
+                    New lobby
                 </Button>
             </CardActions>
             <Snackbar
-                open={snackBarOpen}
-                autoHideDuration={3000}
-                onClose={() => setSnackBarOpen(false)}
-            >
-                <Alert
-                    onClose={() => setSnackBarOpen(false)}
-                    severity={snackbarError ? "error" : "success"}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
-        </Card>
-    );
-};
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message={snackbarMessage}
+                action={action}
+            />
+
+        </Card>)
+}
+
+export default GameCard;

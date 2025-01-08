@@ -1,10 +1,9 @@
-import React from 'react';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent } from '@mui/material';
 import { Friend } from '../../types/Friend';
 
 interface FriendProps {
     friend: Friend
-};
+}
 
 const FriendCard = ( props: FriendProps) => {
     const {friend} = props;

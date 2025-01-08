@@ -1,5 +1,4 @@
 import { CircularProgress, Stack, Typography } from "@mui/material";
-import { useFetchFriends } from "../hooks/useFriends";
 import FriendCard from "./FriendCard/FriendCard";
 import { Friend } from "../types/Friend";
 
@@ -12,7 +11,7 @@ interface FriendsListProps {
 const FriendsList = (props: FriendsListProps) => {
     const { friends, isLoading, isError } = props;
 
-    console.log("friend", friends)
+
     if (isLoading) {
         return <CircularProgress color="secondary" />
     }
@@ -20,7 +19,6 @@ const FriendsList = (props: FriendsListProps) => {
         return <Typography>Your friends could not be loaded.</Typography>
     }
 
-    console.log("friends", friends)
     if (friends) {
         if (friends.length) {
            return  <Stack gap={1}>

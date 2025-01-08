@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { NotificationContext } from "../context/NotificationContext";
 import { Box, Typography, List, ListItem } from "@mui/material";
 

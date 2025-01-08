@@ -1,45 +1,57 @@
-import React from 'react';
-import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
+import { useContext } from 'react';
+import { Typography, CircularProgress, Grid2 } from '@mui/material';
+import PageLayout from '../layouts/PageLayout';
+import SecurityContext from '../context/SecurityContext';
+import { useFetchPlayerGameClassifications } from '../hooks/usePlayerGameClassifications';
+import ClassificationCard from '../components/ClassificationCard/ClassificationCard';
 
-const mockGames = [
-    { id: 1, name: 'Game 1', img: '' },
-    { id: 2, name: 'Game 2', img: '' },
-    { id: 3, name: 'Game 3', img: '' },
-    { id: 4, name: 'Game 4', img: '' },
-];
+import { useGameRecommendations } from '../hooks/useGameRecommendations';
+import RecommendationCard from '../components/RecommendationCard/RecommendationCard';
+
+
 
 const Home = () => {
+    const { loggedInUser } = useContext(SecurityContext);
+    const { classifications, isLoading: classificationsLoading, isError: classificationsError } = useFetchPlayerGameClassifications();
+    const { recommendations, isLoading: recommendationsLoading, isError: recommendationsError } = useGameRecommendations();
+  
+    const renderGameClassifications = () => {
+        if (classificationsLoading) return <CircularProgress color="secondary" />;
+        if (classificationsError) return <Typography>Your classifications could not be loaded.</Typography>;
+        if (classifications)
+            return <Grid2 container spacing={2}>
+                {classifications.map(classification => 
+                <Grid2 size={{xs:12, lg: 4}}>
+                <ClassificationCard classification={classification} />
+                </Grid2>
+                )
+                }
+            </Grid2>
+    }
+
+    const renderGameRecommendations = () => {
+        if (recommendationsLoading) return <CircularProgress color="secondary" />;
+        if (recommendationsError) return <Typography>Your recommendations could not be loaded.</Typography>;
+        if (recommendations)
+            return <Grid2 container spacing={2} >
+                {recommendations.map(recommendation =>
+                    <Grid2 size={{xs: 12, sm: 6, md: 4, xl: 3 }}>
+                        <RecommendationCard recommendation={recommendation} />
+                    </Grid2>
+                )}
+            </Grid2>
+    }
     return (
-        <Box sx={{ padding: '2rem', backgroundColor: '#f0f4f8' }}>
-            <Typography variant="h4" align="center" gutterBottom sx={{ color: '#4CAF50' }}>
-                Welcome
+        <PageLayout title={loggedInUser ? `Welcome back, ${loggedInUser.username}` : "Home"} >
+            <Typography variant="h6" >
+                Recommended for you
             </Typography>
-            <Typography align="center" sx={{ marginBottom: '2rem', color: '#555' }}>
-                Play your games freely and openly
+            {renderGameRecommendations()}
+            <Typography variant="h6" >
+                Your classifications
             </Typography>
-            <Typography variant="h6" gutterBottom>
-                New Games
-            </Typography>
-            <Grid container spacing={3}>
-                {mockGames.map((game) => (
-                    <Grid item xs={12} sm={6} md={3} key={game.id}>
-                        <Card
-                            sx={{
-                                padding: '1rem',
-                                backgroundColor: '#ffffff',
-                                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
-                            }}
-                        >
-                            <CardContent>
-                                <Typography variant="h6" align="center">
-                                    {game.name}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-        </Box>
+            {renderGameClassifications()}
+        </PageLayout>
     );
 };
 

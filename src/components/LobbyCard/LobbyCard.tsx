@@ -1,5 +1,23 @@
-import { Card, CardContent, Typography, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, FormControl, FormHelperText, MenuItem, Select, SelectChangeEvent, IconButton, SnackbarCloseReason, Snackbar } from "@mui/material";
-import { Lobby } from "../../types/Lobby"
+import {
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    IconButton,
+    SnackbarCloseReason,
+    Snackbar,
+} from "@mui/material";
+import { Lobby } from "../../types/Lobby";
 import SecurityContext from "../../context/SecurityContext";
 import { useContext, useState } from "react";
 import dayjs from 'dayjs';
@@ -14,7 +32,7 @@ interface LobbyCardProps {
 }
 const LobbyCard = (props: LobbyCardProps) => {
     const handleClose = (
-        event: React.SyntheticEvent | Event,
+        _: React.SyntheticEvent | Event,
         reason?: SnackbarCloseReason,
     ) => {
         if (reason === 'clickaway') {
@@ -42,7 +60,8 @@ const LobbyCard = (props: LobbyCardProps) => {
    
     const [open, setOpen] = useState<boolean>(false);
     const [invitedPlayerId, setInvitedPlayerId] = useState<string>('');
-    const { friends, isError: friendsError, isLoading: friendsLoading } = useFetchFriends();
+    const { friends } = useFetchFriends();
+
     
     const handleClickOpen = () => {
         setOpen(true);
@@ -59,7 +78,7 @@ const LobbyCard = (props: LobbyCardProps) => {
     const {sendGameInvite} = useSendInvite(handleInviteSuccess);
 
     const handleChange = (event: SelectChangeEvent) => {
-        console.log(event.target.value)
+       
         setInvitedPlayerId(event.target.value as string);
     }
 
@@ -100,7 +119,7 @@ const LobbyCard = (props: LobbyCardProps) => {
                     Join game
                 </Button>}
                 {
-                    currentUserCreatedLobby && <Button
+                    currentUserCreatedLobby && friends && friends.length && <Button
                         variant="contained"
                         color="secondary"
                         onClick={handleClickOpen}
@@ -115,10 +134,8 @@ const LobbyCard = (props: LobbyCardProps) => {
                 component: 'form',
                 onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                     event.preventDefault();
-                    const formData = new FormData(event.currentTarget);
-                    const formJson = Object.fromEntries((formData as any).entries());
-                    const email = formJson.email;
-                    console.log(email);
+                    
+                  
                     handleDialogClose();
                 },
             }}
@@ -134,7 +151,7 @@ const LobbyCard = (props: LobbyCardProps) => {
                         fullWidth
                         inputProps={{ 'aria-label': 'Without label' }}
                     >
-                        {friends &&
+                        {friends && friends.length &&
                             friends.map((friend) => <MenuItem value={friend.friendId} >{friend.friendUsername}</MenuItem>)
                         }
 

@@ -1,7 +1,7 @@
 import { Lobby } from '../types/Lobby';
 import axios from './axios';
 
-export const fetchLobbies = async () => {
+export const fetchLobbies = async ():Promise<Lobby[]> => {
     const response = await axios.get('/lobbies');
     return response.data;
 };

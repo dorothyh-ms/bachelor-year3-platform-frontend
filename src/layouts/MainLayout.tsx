@@ -1,8 +1,8 @@
 
-import { Avatar, Box, Button, Drawer, Link, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
-import {  Outlet } from "react-router-dom"
+import { Avatar, Box, Button, Drawer, List, Toolbar } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
-import { ReactNode, useContext } from "react"
+import { ReactNode, useContext } from "react";
 
 import HomeIcon from '@mui/icons-material/Home';
 import CasinoIcon from '@mui/icons-material/Casino';
@@ -11,12 +11,13 @@ import MailIcon from '@mui/icons-material/Mail';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, SUBMIT_GAME_APPLICATION } from "../constants/routes"
+import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, SUBMIT_GAME_APPLICATION } from "../constants/routes";
 import SecurityContext from "../context/SecurityContext";
 import { useNavigate } from "react-router-dom";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import NavigationTab from "../components/NavLink/NavLink";
+import Chatbot from "../components/Chatbot.tsx";
 
 
 export interface NavigationLink {
@@ -29,7 +30,7 @@ export interface NavigationLink {
 const MainLayout = () => {
     const drawerWidth = 240;
     const {loggedInUser, login} = useContext(SecurityContext);
-
+   
     const navigate = useNavigate();
 
     const drawerLinks: NavigationLink[] = [
@@ -181,6 +182,7 @@ if (loggedInUser){
                 >
                    <Outlet />
                 </Box>
+        <Chatbot></Chatbot>
             </Box>
 }
 
