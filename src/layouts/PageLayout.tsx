@@ -12,7 +12,7 @@ const PageLayout = (props: PageLayoutProps) => {
             <Typography
                 sx={{ mb: 6 }}
                 variant={"h5"}>{title}</Typography>
-            <Stack sx={{gap: 6}}>
+            <Stack sx={{gap: 4}}>
                 {children}
             </Stack>
 
