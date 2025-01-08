@@ -34,7 +34,10 @@ const Home = () => {
             achievements && achievements.map((achievement) => <AchievementCard achievement={achievement} />)
         }
         {
-            !achievements && achievementsLoading && <CircularProgress color="secondary"/>
+            !achievements && !achievementsLoading && <Typography>You have not gained any achievements yet.</Typography>
+        }
+        {
+            achievementsLoading && <CircularProgress color="secondary"/>
         }
         {
             achievements && achievementsError && <Typography>Your achievements could not be loaded.</Typography>

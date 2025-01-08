@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-    Box,
     Typography,
     Button,
     TextField,
@@ -10,6 +9,7 @@ import {
     DialogActions,
     CircularProgress,
     Autocomplete,
+    Stack,
 } from '@mui/material';
 import { useGetLobbies } from '../hooks/useLobbies';
 import { useFetchGames } from '../hooks/useGames';
@@ -17,11 +17,14 @@ import { useCreateLobby } from '../hooks/useLobbies';
 import { useJoinLobby } from '../hooks/useLobbies'; // Import the hook for joining lobbies
 import LobbyCard from '../components/LobbyCard/LobbyCard';
 import PageLayout from '../layouts/PageLayout';
+import { useMatches } from '../hooks/useMatches';
+import MatchCard from '../components/MatchCard/MatchCard';
 
 const Lobby = () => {
-    const {lobbies, isError: lobbiesLoadError, isLoading: lobbiesLoading }  = useGetLobbies();
-    const {  games, isPending: isLoadingGames, isError: isErrorGames } = useFetchGames();
-    const {createLobby} = useCreateLobby();
+    const { lobbies, isError: lobbiesLoadError, isLoading: lobbiesLoading } = useGetLobbies();
+    const { matches, isError: matchesLoadError, isLoading: matchesLoading } = useMatches();
+    const { games, isPending: isLoadingGames, isError: isErrorGames } = useFetchGames();
+    const { createLobby } = useCreateLobby();
     const { } = useJoinLobby(); // Initialize the join lobby hook
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -31,25 +34,42 @@ const Lobby = () => {
     const renderLobbies = () => {
         if (lobbiesLoading) return <CircularProgress color='secondary' />
         if (lobbiesLoadError) return <Typography color="error">Failed to load lobbies.</Typography>
-        return <Box sx={{width: "100%"}}>
-                {lobbies?.length ? (
-                    lobbies.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()).map((lobby: any) => (
-                        <LobbyCard lobby={lobby} />
-                    ))
-                ) : (
-                    <Typography>No active lobbies available.</Typography>
-                )}
-            </Box>
+        return <Stack sx={{ width: "100%" }}>
+            {lobbies?.length ? (
+                lobbies.sort((a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()).map((lobby: any) => (
+                    <LobbyCard lobby={lobby} />
+                ))
+            ) : (
+                <Typography>No active lobbies available.</Typography>
+            )}
+        </Stack>
+    }
+
+
+    const renderMatches = () => {
+        if (matchesLoading) return <CircularProgress color='secondary' />
+        if (matchesLoadError) return <Typography color="error">Failed to load lobbies.</Typography>
+        return <>
+           { matches?.length ? (
+                matches.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()).map((match: any) => (
+                    <MatchCard match={match} />
+                ))
+            ) : (
+                <Typography>No have no ongoing matches.</Typography>
+            )
+            }
+            </>
+
     }
 
     return (
         <PageLayout title="Lobbies">
 
             {/* Create Lobby Dialog */}
-            <Dialog 
-            open={openDialog} 
-            onClose={() => setOpenDialog(false)}
-            fullWidth
+            <Dialog
+                open={openDialog}
+                onClose={() => setOpenDialog(false)}
+                fullWidth
             >
                 <DialogTitle>Create lobby</DialogTitle>
                 <DialogContent>
@@ -86,13 +106,18 @@ const Lobby = () => {
                 </DialogActions>
             </Dialog>
             {renderLobbies()}
-            <Button 
-            variant="contained" 
-            color="secondary" 
-           sx={{width: "fit-content"}}
-            onClick={() => setOpenDialog(true)}>
+
+            <Button
+                variant="contained"
+                color="secondary"
+                sx={{ width: "fit-content" }}
+                onClick={() => setOpenDialog(true)}>
                 Create Lobby
             </Button>
+            <Stack gap={2}>
+                <Typography variant={"h6"}>Your matches</Typography>
+            {renderMatches()}
+            </Stack>
         </PageLayout>
     );
 };
