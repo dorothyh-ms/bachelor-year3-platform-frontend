@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
-import { useChatbot } from "../hooks/useChatbot.ts";
-import { useFetchGames } from "../hooks/useGames.ts";
+import {useEffect, useState} from "react";
+import {useChatbot} from "../hooks/useChatbot.ts";
+import {useFetchGames} from "../hooks/useGames.ts";
 import {
     Box,
-    Typography,
-    IconButton,
-    TextField,
     Button,
-    Paper,
     CircularProgress,
-    Select,
-    MenuItem,
     FormControl,
+    IconButton,
     InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+    Typography,
 } from "@mui/material";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import CloseIcon from "@mui/icons-material/Close";
@@ -23,19 +23,20 @@ type ChatMessage = {
 };
 
 
-
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [input, setInput] = useState("");
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [messages, setMessages] = useState<ChatMessage[]>([
+        {text: "Hello! How can I help you?", sender: "chatbot"},
+    ]);
+
     const [playerQuestion, setPlayerQuestion] = useState<string>();
     const [chatbotResponse, setChatbotResponse] = useState<string>();
     const [selectedSubject, setSelectedSubject] = useState<string>("platform");
     const [chatSubjectOptions, setChatSubjectOptions] = useState<string[]>([]);
 
-    // Fetch games using the useFetchGames hook
-    const { games } = useFetchGames();
 
+    const {data: games} = useFetchGames();
 
 
     useEffect(() => {
@@ -53,7 +54,7 @@ const Chatbot = () => {
         setChatbotResponse(response);
     };
 
-    const { queryChatbot, isLoading, isError } = useChatbot(handleSuccessfulChatbotResponse);
+    const {queryChatbot, isLoading, isError} = useChatbot(handleSuccessfulChatbotResponse);
 
     useEffect(() => {
         if (chatbotResponse) {
@@ -114,7 +115,7 @@ const Chatbot = () => {
                 zIndex: 1000,
             }}
         >
-            <Paper elevation={3} sx={{ borderRadius: 2, overflow: "hidden" }}>
+            <Paper elevation={3} sx={{borderRadius: 2, overflow: "hidden"}}>
                 <Box
                     sx={{
                         display: "flex",
@@ -129,14 +130,14 @@ const Chatbot = () => {
                 >
                     <Typography variant="h6">Chat with us!</Typography>
                     <IconButton color="inherit">
-                        {isOpen ? <CloseIcon /> : <ChatBubbleOutlineIcon />}
+                        {isOpen ? <CloseIcon/> : <ChatBubbleOutlineIcon/>}
                     </IconButton>
                 </Box>
 
                 {isOpen && (
-                    <Box sx={{ p: 2 }}>
+                    <Box sx={{p: 2}}>
                         {/* Dropdown for Game Selection */}
-                        <FormControl fullWidth sx={{ mb: 2 }}>
+                        <FormControl fullWidth sx={{mb: 2}}>
                             <InputLabel id="game-select-label">Select chat subject</InputLabel>
                             <Select
                                 labelId="game-select-label"
@@ -167,9 +168,9 @@ const Chatbot = () => {
                         >
                             {isError &&
                                 <Box
-                                    
+
                                     sx={{
-                                        alignSelf:"flex-start",
+                                        alignSelf: "flex-start",
                                         bgcolor: "error.light",
                                         color: "black",
                                         p: 1,
@@ -196,7 +197,7 @@ const Chatbot = () => {
                             ))}
                         </Box>
 
-                        <Box sx={{ display: "flex", gap: 1 }}>
+                        <Box sx={{display: "flex", gap: 1}}>
                             <TextField
                                 variant="outlined"
                                 size="small"
@@ -211,7 +212,7 @@ const Chatbot = () => {
                                 onClick={sendMessage}
                                 disabled={isLoading}
                             >
-                                {isLoading ? <CircularProgress size={24} /> : "Send"}
+                                {isLoading ? <CircularProgress size={24}/> : "Send"}
                             </Button>
                         </Box>
                     </Box>

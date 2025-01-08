@@ -1,5 +1,6 @@
 import axiosApi from "./axios";
 import {Favorite} from "../types/Favorite";
+import {AxiosError} from "axios";
 
 
 export const fetchFavorites = async (): Promise<Favorite[]> => {
@@ -30,9 +31,14 @@ export const addToFavorites = async (gameId: string): Promise<void> => {
     try {
         const response = await axiosApi.post("/favorites", {gameId});
         console.log("Added to favorites:", response.data);
-    } catch (error) {
-        console.error("Error adding to favorites:", error.response || error.message);
-        throw new Error("Failed to add to favorites");
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            console.error("Error adding to favorites:", error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || "Failed to add to favorites");
+        } else {
+            console.error("Unexpected error:", error);
+            throw new Error("An unexpected error occurred");
+        }
     }
 };
 
@@ -46,8 +52,14 @@ export const removeFromFavorites = async (favoriteId: string): Promise<void> => 
     try {
         const response = await axiosApi.delete(`/favorites/${favoriteId}`);
         console.log("Removed from favorites:", response.data);
-    } catch (error) {
-        console.error("Error removing from favorites:", error.response || error.message);
-        throw new Error("Failed to remove from favorites");
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+            console.error("Error removing from favorites:", error.response?.data || error.message);
+            throw new Error(error.response?.data?.message || "Failed to remove from favorites");
+        } else {
+            console.error("Unexpected error:", error);
+            throw new Error("An unexpected error occurred");
+        }
     }
 };
+

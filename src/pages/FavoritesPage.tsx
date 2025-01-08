@@ -1,4 +1,3 @@
-import React from "react";
 import {Box, CircularProgress, Grid, Typography} from "@mui/material";
 import {useFavorites, useRemoveFromFavorites} from "../hooks/useFavorites";
 import GameCard from "../components/GameCard/GameCard";
@@ -17,14 +16,12 @@ const FavoritesPage = () => {
             <Grid container spacing={2}>
                 {favorites?.map((favorite) => (
                     <Grid item key={favorite.favoriteId}>
-                        {favorite.game ? (
+                        {favorite.game && (
                             <GameCard
                                 game={favorite.game}
-                                isFavorite={true}
+                                isFavorite
                                 onToggleFavorite={() => removeFavorite(favorite.favoriteId)}
                             />
-                        ) : (
-                            <Typography color="error">Invalid favorite data</Typography>
                         )}
                     </Grid>
                 ))}

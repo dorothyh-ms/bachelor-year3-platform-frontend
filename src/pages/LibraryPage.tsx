@@ -1,4 +1,3 @@
-import React from "react";
 import {Alert, Box, CircularProgress, Grid} from "@mui/material";
 import PageLayout from "../layouts/PageLayout";
 import GameCard from "../components/GameCard/GameCard";
