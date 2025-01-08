@@ -41,15 +41,13 @@ export function useCreateLobby(customOnSuccess?: () => void) {
 
 
 export function useJoinLobby() {
+
     const queryClient = useQueryClient();
     const { mutate, isPending, isError } = useMutation({
         mutationFn: joinLobby,
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['lobbies'] });
-            if (data.matchURL) {
-                const newWindow = window.open(data.matchURL, '_blank', 'noopener,noreferrer')
-                if (newWindow) newWindow.opener = null
-            }
+            queryClient.invalidateQueries({ queryKey: ['matches'] });
         },
     });
 
