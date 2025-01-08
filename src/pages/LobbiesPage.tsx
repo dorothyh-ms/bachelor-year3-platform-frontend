@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-    Box,
     Typography,
     Button,
     TextField,
@@ -49,7 +48,7 @@ const Lobby = () => {
 
     const renderMatches = () => {
         if (matchesLoading) return <CircularProgress color='secondary' />
-        if (matchesLoading) return <Typography color="error">Failed to load lobbies.</Typography>
+        if (matchesLoadError) return <Typography color="error">Failed to load lobbies.</Typography>
         return <>
            { matches?.length ? (
                 matches.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()).map((match: any) => (

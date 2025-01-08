@@ -3,7 +3,6 @@ import { Match } from "../../types/Match";
 import CasinoIcon from '@mui/icons-material/Casino';
 import dayjs from 'dayjs';
 import formatDate from "../../utils/formatDate";
-import { createLobby } from "../../services/lobbiesService";
 interface MatchCardProps {
     match : Match;
 }
