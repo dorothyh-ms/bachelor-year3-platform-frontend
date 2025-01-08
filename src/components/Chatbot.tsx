@@ -177,9 +177,9 @@ const Chatbot = () => {
                                         maxWidth: "80%",
                                     }}
                                 >
-                                    Chatbot response could not be loaded. Please try again later.
+                                    Chatbot is unavailable. Please try again later.
                                 </Box>}
-                            {messages.map((msg, index) => (
+                            {!isError && messages.map((msg, index) => (
                                 <Box
                                     key={index}
                                     sx={{
