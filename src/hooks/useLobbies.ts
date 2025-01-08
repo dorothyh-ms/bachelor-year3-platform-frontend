@@ -4,6 +4,7 @@ import { createLobby, fetchLobbies } from '../services/lobbiesService';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { joinLobby } from '../services/lobbiesService';
+import { useNavigate } from 'react-router-dom';
 
 
 export function useGetLobbies() {
@@ -41,15 +42,13 @@ export function useCreateLobby(customOnSuccess?: () => void) {
 
 
 export function useJoinLobby() {
+
     const queryClient = useQueryClient();
     const { mutate, isPending, isError } = useMutation({
         mutationFn: joinLobby,
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['lobbies'] });
-            if (data.matchURL) {
-                const newWindow = window.open(data.matchURL, '_blank', 'noopener,noreferrer')
-                if (newWindow) newWindow.opener = null
-            }
+            queryClient.invalidateQueries({ queryKey: ['matches'] });
         },
     });
 
