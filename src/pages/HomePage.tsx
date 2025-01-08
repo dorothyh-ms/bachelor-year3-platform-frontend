@@ -13,8 +13,7 @@ import RecommendationCard from '../components/RecommendationCard/RecommendationC
 const Home = () => {
     const { loggedInUser } = useContext(SecurityContext);
     const { classifications, isLoading: classificationsLoading, isError: classificationsError } = useFetchPlayerGameClassifications();
-    const { recommendations, isLoading: recommendationsLoading, isError: recommendationsError } = useGameRecommendations();
-  
+
     const renderGameClassifications = () => {
         if (classificationsLoading) return <CircularProgress color="secondary" />;
         if (classificationsError) return <Typography>Your classifications could not be loaded.</Typography>;
@@ -29,24 +28,15 @@ const Home = () => {
             </Grid2>
     }
 
-    const renderGameRecommendations = () => {
-        if (recommendationsLoading) return <CircularProgress color="secondary" />;
-        if (recommendationsError) return <Typography>Your recommendations could not be loaded.</Typography>;
-        if (recommendations)
-            return <Grid2 container spacing={2} >
-                {recommendations.map(recommendation =>
-                    <Grid2 size={{xs: 12, sm: 6, md: 4, xl: 3 }}>
-                        <RecommendationCard recommendation={recommendation} />
-                    </Grid2>
-                )}
-            </Grid2>
+    const renderAchievements = () => {
+     return null;
     }
     return (
-        <PageLayout title={loggedInUser ? `Welcome back, ${loggedInUser.username}` : "Home"} >
+        <PageLayout title={loggedInUser?.username ? `Welcome back, ${loggedInUser.username}` : "Home"} >
             <Typography variant="h6" >
-                Recommended for you
+                Your achievements
             </Typography>
-            {renderGameRecommendations()}
+            {renderAchievements()}
             <Typography variant="h6" >
                 Your classifications
             </Typography>
