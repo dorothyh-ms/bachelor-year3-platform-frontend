@@ -1,11 +1,13 @@
-type GamePublishRequest = {
+type GameSubmission = {
+    id: string;
     name: string;
     genre: string;
     difficultyLevel: string;
     price: number;
     description: string;
-    image: File;
+    image: string;
     url: string;
+    submissionState: string;
 };
 
-export default GamePublishRequest;
+export default GameSubmission;

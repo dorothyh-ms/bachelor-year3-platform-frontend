@@ -9,3 +9,5 @@ export const ANALYTICS = '/analytics'
 export const ADD_GAME = '/add-game';
 export const ENGAGEMENT_PREDICTIONS = '/engagement-predictions';
 export const SUBMIT_GAME_APPLICATION = '/games/new'
+export const ADMIN_GAME_LIST = "/admin/games";
+export const MY_SUBMISSIONS = "/my-submissions";

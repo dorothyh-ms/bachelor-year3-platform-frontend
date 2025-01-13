@@ -7,3 +7,5 @@ export interface Game {
     description: string
     image: string;
 }
+
+export default Game;

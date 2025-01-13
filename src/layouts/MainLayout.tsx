@@ -1,36 +1,46 @@
+import {Avatar, Box, Button, Drawer, List, Toolbar} from "@mui/material";
+import {Outlet, useNavigate} from "react-router-dom";
 
-import { Avatar, Box, Button, Drawer, List, Toolbar } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import {ReactNode, useContext} from "react";
 
-import { ReactNode, useContext } from "react";
-
-import HomeIcon from '@mui/icons-material/Home';
-import CasinoIcon from '@mui/icons-material/Casino';
-import GroupIcon from '@mui/icons-material/Group';
-import MailIcon from '@mui/icons-material/Mail';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import { ANALYTICS, FRIENDS, GAMES, HOME, INVITES, LOBBIES, PROFILE, SUBMIT_GAME_APPLICATION } from "../constants/routes";
-import SecurityContext from "../context/SecurityContext";
-import { useNavigate } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
+import CasinoIcon from "@mui/icons-material/Casino";
+import GroupIcon from "@mui/icons-material/Group";
+import MailIcon from "@mui/icons-material/Mail";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"; // Fixed Import
+import AssignmentIcon from "@mui/icons-material/Assignment"; // Fixed Import
 import FavoriteIcon from "@mui/icons-material/Favorite";
+
+import {
+    ADMIN_GAME_LIST,
+    ANALYTICS,
+    FRIENDS,
+    GAMES,
+    HOME,
+    INVITES,
+    LOBBIES,
+    MY_SUBMISSIONS,
+    PROFILE,
+    SUBMIT_GAME_APPLICATION,
+} from "../constants/routes";
+import SecurityContext from "../context/SecurityContext";
 
 import NavigationTab from "../components/NavLink/NavLink";
 import Chatbot from "../components/Chatbot.tsx";
-
 
 export interface NavigationLink {
     route: string;
     text: string;
     icon: ReactNode;
-    handleClick : () => void;
+    handleClick: () => void;
 }
 
 const MainLayout = () => {
     const drawerWidth = 240;
     const {loggedInUser, login} = useContext(SecurityContext);
-   
     const navigate = useNavigate();
 
     const drawerLinks: NavigationLink[] = [
@@ -38,102 +48,121 @@ const MainLayout = () => {
             route: HOME,
             text: "Home",
             icon: <HomeIcon color="secondary"/>,
-            handleClick : () => {navigate(HOME)}
+            handleClick: () => {
+                navigate(HOME);
+            },
         },
-        // {
-        //     route: STORE,
-        //     text: "Store",
-        //     icon: <StorefrontIcon color="secondary"/>,
-        //     handleClick : () => {navigate(STORE)}
-        // },
-
-    ]
+    ];
 
     const loggedInPlayerLinks: NavigationLink[] = [
         {
             route: GAMES,
             text: "Library",
             icon: <CasinoIcon color="secondary"/>,
-            handleClick : () => {navigate(GAMES)}
+            handleClick: () => {
+                navigate(GAMES);
+            },
         },
         {
             route: FRIENDS,
             text: "Friends",
             icon: <GroupIcon color="secondary"/>,
-            handleClick : () => {navigate(FRIENDS)}
+            handleClick: () => {
+                navigate(FRIENDS);
+            },
         },
         {
             route: INVITES,
             text: "Invites",
             icon: <MailIcon color="secondary"/>,
-            handleClick : () => {navigate(INVITES)}
+            handleClick: () => {
+                navigate(INVITES);
+            },
         },
         {
             route: LOBBIES,
             text: "Lobbies",
             icon: <MeetingRoomIcon color="secondary"/>,
-            handleClick : () => {navigate(LOBBIES)}
+            handleClick: () => {
+                navigate(LOBBIES);
+            },
         },
         {
             route: SUBMIT_GAME_APPLICATION,
-            text: "Submit a game",
+            text: "Submit a Game",
             icon: <AddBoxIcon color="secondary"/>,
-            handleClick : () => {navigate(SUBMIT_GAME_APPLICATION)}
+            handleClick: () => {
+                navigate(SUBMIT_GAME_APPLICATION);
+            },
+        },
+        {
+            route: ADMIN_GAME_LIST,
+            text: "Admin Submissions",
+            icon: <AdminPanelSettingsIcon color="secondary"/>,
+            handleClick: () => {
+                navigate(ADMIN_GAME_LIST);
+            },
+        },
+        {
+            route: MY_SUBMISSIONS,
+            text: "My Submissions",
+            icon: <AssignmentIcon color="secondary"/>,
+            handleClick: () => {
+                navigate(MY_SUBMISSIONS);
+            },
         },
         {
             route: "/favorites",
             text: "Favorites",
-            icon: <FavoriteIcon color="secondary" />,
+            icon: <FavoriteIcon color="secondary"/>,
             handleClick: () => {
                 navigate("/favorites");
             },
-        }
+        },
+    ];
 
-
-    ]
-if (loggedInUser){
-    loggedInPlayerLinks.push({
-        route: ANALYTICS,
-        text: "Analytics",
-        icon: <AnalyticsIcon color="secondary"/>,
-        handleClick : () => {navigate(ANALYTICS)}
-    })
-}
-
-
-    const renderNavLinks = () => {
-        return <>
-         {
-            drawerLinks.map((link) => (<NavigationTab link={link} />))
-        }
-        {
-            loggedInUser && loggedInPlayerLinks.map((link) => (<NavigationTab link={link} />))
-        }
-        </>
+    // Add Analytics link for logged-in users
+    if (loggedInUser) {
+        loggedInPlayerLinks.push({
+            route: ANALYTICS,
+            text: "Analytics",
+            icon: <AnalyticsIcon color="secondary"/>,
+            handleClick: () => {
+                navigate(ANALYTICS);
+            },
+        });
     }
 
+    const renderNavLinks = () => (
+        <>
+            {drawerLinks.map((link) => (
+                <NavigationTab key={link.route} link={link}/>
+            ))}
+            {loggedInUser &&
+                loggedInPlayerLinks.map((link) => (
+                    <NavigationTab key={link.route} link={link}/>
+                ))}
+        </>
+    );
 
-
-    return <Box sx={{display: 'flex'}}>
-                <Drawer
-                    sx={{
+    return (
+        <Box sx={{display: "flex"}}>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    "& .MuiDrawer-paper": {
                         width: drawerWidth,
-                        flexShrink: 0,
-                        '& .MuiDrawer-paper': {
-                            width: drawerWidth,
-                            boxSizing: 'border-box',
-                            backgroundColor: '#1E1E2F',
-                            color: '#ffffff',
-                        },
-
-                    }}
-                    variant="permanent"
-                    anchor="left"
-                >
-                    <Toolbar/>
-                    <List>
-                   {renderNavLinks()}
-                    </List>
+                        boxSizing: "border-box",
+                        backgroundColor: "#1E1E2F",
+                        color: "#ffffff",
+                    },
+                }}
+                variant="permanent"
+                anchor="left"
+            >
+                <Toolbar/>
+                <List>{renderNavLinks()}</List>
                 <Box
                     sx={{
                         position: "absolute",
@@ -142,17 +171,19 @@ if (loggedInUser){
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: 2
+                        gap: 2,
                     }}
                     onClick={() => {
-                        navigate(PROFILE)
+                        navigate(PROFILE);
                     }}
                 >
                     <Avatar
-                        sx={{ cursor: "pointer",
-                            width:36,
-                            height:36,
-                            backgroundColor: "secondary" }}
+                        sx={{
+                            cursor: "pointer",
+                            width: 36,
+                            height: 36,
+                            backgroundColor: "secondary",
+                        }}
                     />
                     <Box
                         sx={{
@@ -160,30 +191,38 @@ if (loggedInUser){
                             fontSize: 12,
                         }}
                     >
-                        {loggedInUser ? loggedInUser.username : <Button
-                        color="secondary"
-                        onClick={() => {login()}}
-                        variant='contained'
-                        >Log in
-                        </Button>}
+                        {loggedInUser ? (
+                            loggedInUser.username
+                        ) : (
+                            <Button
+                                color="secondary"
+                                onClick={() => {
+                                    login();
+                                }}
+                                variant="contained"
+                            >
+                                Log in
+                            </Button>
+                        )}
                     </Box>
                 </Box>
-                </Drawer>
-                <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        p: 3,
-                        backgroundColor: '#2A2A40',
-                        minHeight: '100vh',
-                        display: "flex",
-                        justifyContent: "center"
-                    }}
-                >
-                   <Outlet />
-                </Box>
-        <Chatbot></Chatbot>
+            </Drawer>
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    backgroundColor: "#2A2A40",
+                    minHeight: "100vh",
+                    display: "flex",
+                    justifyContent: "center",
+                }}
+            >
+                <Outlet/>
             </Box>
-}
+            <Chatbot/>
+        </Box>
+    );
+};
 
 export default MainLayout;

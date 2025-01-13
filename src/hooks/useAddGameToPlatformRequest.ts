@@ -1,26 +1,20 @@
-import { useMutation } from "@tanstack/react-query";
-import { createGamePublishRequest } from "../services/addGameToPlatformRequestService";
+import {useMutation} from "@tanstack/react-query";
+import {createGamePublishRequest} from "../services/addGameToPlatformRequestService";
 
 export function useAddGameToPlatformRequest(customOnSuccess?: () => void) {
-
-    const { mutate, isPending, isError } = useMutation({
+    const {mutate, isPending, isError} = useMutation({
         mutationFn: createGamePublishRequest,
         onSuccess: () => {
-            if (customOnSuccess){
-                customOnSuccess();
-            }
+            if (customOnSuccess) customOnSuccess();
         },
-        onError:() => {
-            if (customOnSuccess){
-                customOnSuccess();
-            }
+        onError: () => {
+            console.error("Failed to submit game.");
         },
-       
     });
 
     return {
         isLoading: isPending,
         isError,
-        submitAddGameToPlatformRequest: mutate
-    }
+        submitAddGameToPlatformRequest: mutate,
+    };
 }
