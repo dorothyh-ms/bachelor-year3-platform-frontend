@@ -1,10 +1,11 @@
-import  {  useState, useEffect, ReactNode } from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import Keycloak from 'keycloak-js'
-import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from '../services/auth';
+import {addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader} from '../services/auth';
 import {isExpired} from 'react-jwt';
 import SecurityContext from "./SecurityContext"
-import { useRecordLogin } from '../hooks/useRecordLogin';
+import {useRecordLogin} from '../hooks/useRecordLogin';
 import User from '../types/User';
+
 interface IWithChildren {
     children: ReactNode
 }
@@ -25,23 +26,23 @@ export default function SecurityContextProvider({children}: IWithChildren) {
     useEffect(() => {
 
         keycloak.init({onLoad: 'login-required'}).then((authenticated) => {
-            if (authenticated){
-                recordLogin();
+            if (authenticated) {
+                addAccessTokenToAuthHeader(keycloak.token);
             }
         })
     }, [])
 
     keycloak.onAuthSuccess = () => {
         addAccessTokenToAuthHeader(keycloak.token)
-        if(keycloak.idTokenParsed){
-           
-        setLoggedInUser({
-            playerId: keycloak.idTokenParsed.sub ?? "",
-            username: keycloak.idTokenParsed.given_name,
-            roles : keycloak.tokenParsed?.realm_access?.roles ?? []
-        });
-       
-    }
+        if (keycloak.idTokenParsed) {
+
+            setLoggedInUser({
+                playerId: keycloak.idTokenParsed.sub ?? "",
+                username: keycloak.idTokenParsed.given_name,
+                roles: keycloak.tokenParsed?.realm_access?.roles ?? []
+            });
+
+        }
     }
 
     keycloak.onAuthLogout = () => {

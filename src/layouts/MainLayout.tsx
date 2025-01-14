@@ -10,8 +10,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"; // Fixed Import
-import AssignmentIcon from "@mui/icons-material/Assignment"; // Fixed Import
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import {
@@ -54,7 +54,37 @@ const MainLayout = () => {
         },
     ];
 
-    const loggedInPlayerLinks: NavigationLink[] = [
+    const adminLinks: NavigationLink[] = [
+        {
+            route: ADMIN_GAME_LIST,
+            text: "Admin Submissions",
+            icon: <AdminPanelSettingsIcon color="secondary"/>,
+            handleClick: () => {
+                navigate(ADMIN_GAME_LIST);
+            },
+        },
+    ];
+
+    const gameDevLinks: NavigationLink[] = [
+        {
+            route: SUBMIT_GAME_APPLICATION,
+            text: "Submit a Game",
+            icon: <AddBoxIcon color="secondary"/>,
+            handleClick: () => {
+                navigate(SUBMIT_GAME_APPLICATION);
+            },
+        },
+        {
+            route: MY_SUBMISSIONS,
+            text: "My Submissions",
+            icon: <AssignmentIcon color="secondary"/>,
+            handleClick: () => {
+                navigate(MY_SUBMISSIONS);
+            },
+        },
+    ];
+
+    const playerLinks: NavigationLink[] = [
         {
             route: GAMES,
             text: "Library",
@@ -88,30 +118,6 @@ const MainLayout = () => {
             },
         },
         {
-            route: SUBMIT_GAME_APPLICATION,
-            text: "Submit a Game",
-            icon: <AddBoxIcon color="secondary"/>,
-            handleClick: () => {
-                navigate(SUBMIT_GAME_APPLICATION);
-            },
-        },
-        {
-            route: ADMIN_GAME_LIST,
-            text: "Admin Submissions",
-            icon: <AdminPanelSettingsIcon color="secondary"/>,
-            handleClick: () => {
-                navigate(ADMIN_GAME_LIST);
-            },
-        },
-        {
-            route: MY_SUBMISSIONS,
-            text: "My Submissions",
-            icon: <AssignmentIcon color="secondary"/>,
-            handleClick: () => {
-                navigate(MY_SUBMISSIONS);
-            },
-        },
-        {
             route: "/favorites",
             text: "Favorites",
             icon: <FavoriteIcon color="secondary"/>,
@@ -121,29 +127,29 @@ const MainLayout = () => {
         },
     ];
 
-    // Add Analytics link for logged-in users
-    if (loggedInUser) {
-        loggedInPlayerLinks.push({
-            route: ANALYTICS,
-            text: "Analytics",
-            icon: <AnalyticsIcon color="secondary"/>,
-            handleClick: () => {
-                navigate(ANALYTICS);
-            },
-        });
-    }
+    const analyticsLink: NavigationLink = {
+        route: ANALYTICS,
+        text: "Analytics",
+        icon: <AnalyticsIcon color="secondary"/>,
+        handleClick: () => {
+            navigate(ANALYTICS);
+        },
+    };
 
-    const renderNavLinks = () => (
-        <>
-            {drawerLinks.map((link) => (
-                <NavigationTab key={link.route} link={link}/>
-            ))}
-            {loggedInUser &&
-                loggedInPlayerLinks.map((link) => (
-                    <NavigationTab key={link.route} link={link}/>
-                ))}
-        </>
-    );
+    const renderNavLinks = () => {
+        const links = [...drawerLinks, ...playerLinks];
+
+        if (loggedInUser?.roles?.includes("Admin")) {
+            links.push(...adminLinks, ...gameDevLinks, analyticsLink);
+        } else if (loggedInUser?.roles.includes("gameDev")) {
+            links.push(...gameDevLinks, analyticsLink);
+        } else if (loggedInUser) {
+            links.push(analyticsLink);
+        }
+
+        return links.map((link) => <NavigationTab key={link.route} link={link}/>);
+    };
+
 
     return (
         <Box sx={{display: "flex"}}>

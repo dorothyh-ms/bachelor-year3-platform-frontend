@@ -2,7 +2,6 @@ import {Alert, Box, CircularProgress, Grid, Typography} from "@mui/material";
 import {useGameSubmissions} from "../hooks/useGameSubmissions";
 import PageLayout from "../layouts/PageLayout";
 import GameCard from "../components/GameCard/GameCard"; // Reuse GameCard for display
-import GameSubmission from "../types/GameSubmission";
 import {transformGameSubmission} from "../utils/transformGameSubmission"; // Import the transformation function
 
 const AdminGameListPage = () => {
@@ -25,15 +24,16 @@ const AdminGameListPage = () => {
             )}
 
             {/* Game Submissions Grid */}
-            {gameSubmissions && (
+            {gameSubmissions && Array.isArray(gameSubmissions) && (
                 <Grid container spacing={2}>
-                    {gameSubmissions.map((submission: GameSubmission) => (
+                    {gameSubmissions.map((submission) => (
                         <Grid item xs={12} sm={6} md={4} key={submission.id}>
                             <GameCard game={transformGameSubmission(submission)}/>
                         </Grid>
                     ))}
                 </Grid>
             )}
+
 
             {/* No Content */}
             {gameSubmissions?.length === 0 && (
