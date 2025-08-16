@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npx tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -20,6 +20,7 @@
     "@nivo/bar": "^0.88.0",
     "@nivo/core": "^0.88.0",
     "@nivo/line": "^0.88.0",
+    "@stomp/stompjs": "^7.1.1",
     "@tanstack/react-query": "^5.62.8",
     "@tanstack/react-query-devtools": "^5.62.8",
     "@types/keycloak-js": "^3.4.1",
@@ -37,11 +38,12 @@
     "react-query": "^3.39.3",
     "react-router-dom": "^7.0.1",
     "routes": "^2.1.0",
-    "typescript": "~5.6.2",
+    "sockjs-client": "^1.6.1",
     "vite": "^5.4.11",
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@types/sockjs-client": "^1.5.4",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -49,6 +51,7 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
     "prettier": "^3.3.3",
+    "typescript": "^5.9.2",
     "typescript-eslint": "^8.11.0"
   }
 }

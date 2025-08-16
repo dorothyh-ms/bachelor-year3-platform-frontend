@@ -1,76 +1,123 @@
-import  {  useState, useEffect, ReactNode } from 'react';
-import Keycloak from 'keycloak-js'
-import { addAccessTokenToAuthHeader, removeAccessTokenFromAuthHeader } from '../services/auth';
-import {isExpired} from 'react-jwt';
-import SecurityContext from "./SecurityContext"
-import { useRecordLogin } from '../hooks/useRecordLogin';
-import User from '../types/User';
+// src/context/SecurityContextProvider.tsx
+import { useState, useEffect, ReactNode } from "react";
+import Keycloak, { KeycloakConfig } from "keycloak-js";
+import { isExpired } from "react-jwt";
+import SecurityContext from "./SecurityContext";
+import { useRecordLogin } from "../hooks/useRecordLogin";
+import User from "../types/User";
+
+// ---- Types ----
 interface IWithChildren {
-    children: ReactNode
+    children: ReactNode;
 }
 
-const keycloakConfig = {
+// Minimal shape for the ID token claims we use
+interface KCIdTokenParsed {
+    sub?: string;
+    preferred_username?: string;
+    given_name?: string;
+    // allow other claims without using `any`
+    [claim: string]: unknown;
+}
+
+// Expose kc on window without `any`
+declare global {
+    interface Window {
+        kc?: Keycloak;
+    }
+}
+
+// ---- Keycloak init ----
+const keycloakConfig: KeycloakConfig = {
     url: import.meta.env.VITE_KC_URL,
     realm: import.meta.env.VITE_KC_REALM,
     clientId: import.meta.env.VITE_KC_CLIENT_ID,
+};
+
+const keycloak = new Keycloak(keycloakConfig);
+
+// ---- Helpers ----
+function buildUserFromToken(idTokenParsed: KCIdTokenParsed | undefined, roles: string[] | undefined): User | undefined {
+    if (!idTokenParsed) return undefined;
+    const username =
+        idTokenParsed.preferred_username ??
+        idTokenParsed.given_name ??
+        ""; // fallback to empty to keep type happy
+
+    return {
+        playerId: idTokenParsed.sub ?? "",
+        username,
+        roles: roles ?? [],
+    };
 }
 
-const keycloak: Keycloak = new Keycloak(keycloakConfig)
-
-
-export default function SecurityContextProvider({children}: IWithChildren) {
-    const {recordLogin} = useRecordLogin();
+export default function SecurityContextProvider({ children }: IWithChildren) {
+    const { recordLogin } = useRecordLogin();
     const [loggedInUser, setLoggedInUser] = useState<User | undefined>(undefined);
 
+    // Initial KC bootstrap
     useEffect(() => {
+        void keycloak.init({ onLoad: "login-required" }).then((authenticated) => {
+            if (!authenticated) return;
 
-        keycloak.init({onLoad: 'login-required'}).then((authenticated) => {
-            if (authenticated){
-                recordLogin();
-            }
-        })
-    }, [])
+            // expose for axios interceptor
+            window.kc = keycloak;
 
-    keycloak.onAuthSuccess = () => {
-        addAccessTokenToAuthHeader(keycloak.token)
-        if(keycloak.idTokenParsed){
-           
-        setLoggedInUser({
-            playerId: keycloak.idTokenParsed.sub ?? "",
-            username: keycloak.idTokenParsed.given_name,
-            roles : keycloak.tokenParsed?.realm_access?.roles ?? []
+            // record login (ignore returned promise intentionally)
+            void recordLogin();
+
+            // set initial user
+            const roles = keycloak.tokenParsed?.realm_access?.roles as string[] | undefined;
+            const user = buildUserFromToken(keycloak.idTokenParsed as KCIdTokenParsed | undefined, roles);
+            if (user) setLoggedInUser(user);
         });
-       
-    }
-    }
+    }, [recordLogin]);
+
+    // KC event handlers
+    keycloak.onAuthSuccess = () => {
+        window.kc = keycloak;
+        const roles = keycloak.tokenParsed?.realm_access?.roles as string[] | undefined;
+        const user = buildUserFromToken(keycloak.idTokenParsed as KCIdTokenParsed | undefined, roles);
+        if (user) setLoggedInUser(user);
+    };
 
     keycloak.onAuthLogout = () => {
-        removeAccessTokenFromAuthHeader()
-    }
+        window.kc = undefined;
+        setLoggedInUser(undefined);
+    };
 
     keycloak.onAuthError = () => {
-        removeAccessTokenFromAuthHeader()
-    }
+        // keep kc but clear user
+        setLoggedInUser(undefined);
+    };
 
     keycloak.onTokenExpired = () => {
-        keycloak.updateToken(-1).then(function () {
-            addAccessTokenToAuthHeader(keycloak.token)
-            setLoggedInUser(keycloak.idTokenParsed?.given_name)
-        })
-    }
+        // refresh and update user; if it fails, trigger login
+        void keycloak
+            .updateToken(30)
+            .then(() => {
+                window.kc = keycloak;
+                const roles = keycloak.tokenParsed?.realm_access?.roles as string[] | undefined;
+                const user = buildUserFromToken(keycloak.idTokenParsed as KCIdTokenParsed | undefined, roles);
+                if (user) setLoggedInUser(user);
+            })
+            .catch(() => {
+                void keycloak.login();
+            });
+    };
 
+    // API exposed to context
     function login() {
-        keycloak.login()
+        void keycloak.login();
     }
 
     function logout() {
-        const logoutOptions = {redirectUri: import.meta.env.VITE_REACT_APP_URL}
-        keycloak.logout(logoutOptions)
+        const logoutOptions = { redirectUri: import.meta.env.VITE_REACT_APP_URL as string };
+        void keycloak.logout(logoutOptions);
     }
 
     function isAuthenticated() {
-        if (keycloak.token) return !isExpired(keycloak.token)
-        else return false
+        return keycloak.token ? !isExpired(keycloak.token) : false;
     }
 
     return (
@@ -85,6 +132,4 @@ export default function SecurityContextProvider({children}: IWithChildren) {
             {children}
         </SecurityContext.Provider>
     );
-};
-
-
+}

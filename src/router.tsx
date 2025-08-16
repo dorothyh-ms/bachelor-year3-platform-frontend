@@ -25,6 +25,7 @@ import RequireCompletedProfile from "./components/RequireCompletedProfile/Requir
 import AnalyticsPage from "./pages/AnalyticsPage";
 import AddGamePage from "./pages/AddGamePage";
 import PlayerEngagementPredictionPage from "./pages/PlayerGameEngagementPage";
+import GameLobbyPage from "./components/LobbyCard/GameLobbyPage.tsx";
 
 
 
@@ -40,6 +41,7 @@ const router = createBrowserRouter(
                     <Route path={FRIENDS} element={<Friends />} />
                     <Route path={INVITES} element={<InvitationsPage />} />
                     <Route path={LOBBIES} element={<Lobby />} />
+                    <Route path={LOBBIES + "/:lobbyId"} element={<GameLobbyPage />} />
                     <Route path={ANALYTICS} element={<AnalyticsPage />} />
                     <Route path={ENGAGEMENT_PREDICTIONS} element={<PlayerEngagementPredictionPage />} />
                     <Route path="/favorites" element={<FavoritesPage />} />

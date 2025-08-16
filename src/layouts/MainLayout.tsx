@@ -30,7 +30,7 @@ export interface NavigationLink {
 const MainLayout = () => {
     const drawerWidth = 240;
     const {loggedInUser, login} = useContext(SecurityContext);
-   
+
     const navigate = useNavigate();
 
     const drawerLinks: NavigationLink[] = [
@@ -101,16 +101,17 @@ if (loggedInUser){
 }
 
 
-    const renderNavLinks = () => {
-        return <>
-         {
-            drawerLinks.map((link) => (<NavigationTab link={link} />))
-        }
-        {
-            loggedInUser && loggedInPlayerLinks.map((link) => (<NavigationTab link={link} />))
-        }
+    const renderNavLinks = () => (
+        <>
+            {drawerLinks.map((link) => (
+                <NavigationTab key={link.route} link={link} />
+            ))}
+            {loggedInUser && loggedInPlayerLinks.map((link) => (
+                <NavigationTab key={link.route} link={link} />
+            ))}
         </>
-    }
+    );
+
 
 
 

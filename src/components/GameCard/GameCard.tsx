@@ -1,4 +1,3 @@
-
 import {
     Card,
     IconButton,
@@ -12,7 +11,6 @@ import {
     Snackbar,
     Stack,
 } from "@mui/material";
-
 import { Game } from "../../types/Game";
 import defaultGameImage from '../../assets/images/banditgames-mascot.png';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -45,8 +43,6 @@ const GameCard = (props: GameCardProps) => {
         setSnackBarOpen(false);
     };
 
-
-
     const action = (
         <>
             <Button color="secondary" size="small" onClick={() => {
@@ -69,11 +65,11 @@ const GameCard = (props: GameCardProps) => {
         <Card sx={{ maxWidth: 345, minHeight: {xs: "30em", lg: "28em"}, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <Stack>
                 <CardMedia
-                component="img"
-                height="194"
-                image={game.image ? game.image : defaultGameImage}
-                alt={game.name}
-            />
+                    component="img"
+                    height="194"
+                    image={game.image ? game.image : defaultGameImage}
+                    alt={game.name}
+                />
                 <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                     <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
                         {game.name}
@@ -104,8 +100,8 @@ const GameCard = (props: GameCardProps) => {
                 message={snackbarMessage}
                 action={action}
             />
-
-        </Card>)
+        </Card>
+    )
 }
 
 export default GameCard;

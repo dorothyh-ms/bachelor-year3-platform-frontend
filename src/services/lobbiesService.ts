@@ -1,18 +1,31 @@
-import { Lobby } from '../types/Lobby';
-import axios from './axios';
+import axiosApi from "./axios";
+import { Lobby } from "../types/Lobby";
 
-export const fetchLobbies = async ():Promise<Lobby[]> => {
-    const response = await axios.get('/lobbies');
-    return response.data;
-};
+export async function fetchLobbies(): Promise<Lobby[]> {
+    const res = await axiosApi.get<Lobby[]>("/lobbies");
+    if (res.status === 204) return [];
+    return res.data;
+}
 
-export const createLobby = async (gameId: string) => {
-    const response = await axios.post(`/games/${gameId}/lobbies`);
-    return response.data;
-};
+export async function fetchLobby(lobbyId: string): Promise<Lobby> {
+    const res = await axiosApi.get<Lobby>(`/lobbies/${lobbyId}`);
+    return res.data;
+}
 
+export async function deleteLobby(lobbyId: string): Promise<void> {
+    await axiosApi.delete(`/lobbies/${lobbyId}`);
+}
 
-export async function joinLobby(lobbyId: string) : Promise<Lobby>   {
-    const {data: lobby} = await axios.patch<Lobby>(`/lobbies/${lobbyId}`);
-    return lobby;
+export async function leaveLobby(lobbyId: string): Promise<void> {
+    await axiosApi.post(`/lobbies/${lobbyId}/leave`);
+}
+
+export async function createLobby(gameId: string): Promise<Lobby> {
+    const res = await axiosApi.post<Lobby>(`/games/${gameId}/lobbies`);
+    return res.data;
+}
+
+export async function joinLobby(lobbyId: string): Promise<Lobby> {
+    const res = await axiosApi.patch<Lobby>(`/lobbies/${lobbyId}`);
+    return res.data;
 }
