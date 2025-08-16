@@ -19,6 +19,7 @@ import { LobbyMessage } from "../../types/LobbyMessage";
 import { useLobbyChat } from "../../hooks/useLobbyChat";
 import SecurityContext from "../../context/SecurityContext";
 import { PlayerSlimDto } from "../../types/Lobby";
+import { colorForId } from "../../utils/color";
 
 const GameLobbyPage = () => {
     const { lobbyId } = useParams();
@@ -29,25 +30,22 @@ const GameLobbyPage = () => {
     const [players, setPlayers] = useState<PlayerSlimDto[]>([]);
     const [input, setInput] = useState("");
 
-    // Seed chat once
     useEffect(() => {
         setMessages(initialMessages);
     }, [initialMessages]);
 
-    // Seed players once from loaded lobby
+    // Always include both createdBy and joinedPlayer, avoid duplicates
     useEffect(() => {
         if (!lobby) return;
-        const list: PlayerSlimDto[] = [];
-        if (lobby.initiatingPlayer) list.push(lobby.initiatingPlayer);
-        if (lobby.joinedPlayer) list.push(lobby.joinedPlayer);
-        setPlayers(list);
+        const playerMap: { [id: string]: PlayerSlimDto } = {};
+        if (lobby.createdBy) playerMap[lobby.createdBy.playerId] = lobby.createdBy;
+        if (lobby.joinedPlayer) playerMap[lobby.joinedPlayer.playerId] = lobby.joinedPlayer;
+        setPlayers(Object.values(playerMap));
     }, [lobby]);
 
     // Handle incoming WS messages
     const handleChatMessage = useCallback((m: LobbyMessage) => {
         setMessages((prev) => [...prev, m]);
-
-        // Keep sidebar in sync live
         if (m.type === "JOIN") {
             setPlayers((prev) => {
                 if (prev.some((p) => p.playerId === m.senderId)) return prev;
@@ -58,7 +56,6 @@ const GameLobbyPage = () => {
         }
     }, []);
 
-    // Live chat socket
     const { sendChat } = useLobbyChat(lobbyId, handleChatMessage);
 
     const { loggedInUser } = useContext(SecurityContext);
@@ -128,7 +125,14 @@ const GameLobbyPage = () => {
                     >
                         {messages.map((m, idx) => (
                             <Box key={`${m.createdAt}-${idx}`}>
-                                <Typography variant="caption" sx={{ opacity: 0.75 }}>
+                                <Typography
+                                    variant="caption"
+                                    sx={{
+                                        opacity: 0.75,
+                                        color: colorForId(m.senderId),
+                                        fontWeight: 600,
+                                    }}
+                                >
                                     {m.senderName} • {new Date(m.createdAt).toLocaleTimeString()}
                                 </Typography>
                                 <Typography variant="body2">{m.content}</Typography>
@@ -175,14 +179,28 @@ const GameLobbyPage = () => {
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Stack spacing={2}>
-                    {players.map((p) => (
-                        <Stack key={p.playerId} direction="row" spacing={2} alignItems="center">
-                            <Avatar sx={{ width: 36, height: 36 }}>
-                                {p.username?.charAt(0)?.toUpperCase() ?? "P"}
-                            </Avatar>
-                            <Typography>{p.username}</Typography>
-                        </Stack>
-                    ))}
+                    {players.map((p) => {
+                        const latestName =
+                            messages
+                                .filter((m) => m.senderId === p.playerId)
+                                .map((m) => m.senderName)
+                                .pop() ?? p.username;
+                        return (
+                            <Stack key={p.playerId} direction="row" spacing={2} alignItems="center">
+                                <Avatar
+                                    sx={{
+                                        width: 36,
+                                        height: 36,
+                                        bgcolor: colorForId(p.playerId),
+                                        color: "#fff",
+                                    }}
+                                >
+                                    {latestName?.charAt(0)?.toUpperCase() ?? "P"}
+                                </Avatar>
+                                <Typography>{latestName}</Typography>
+                            </Stack>
+                        );
+                    })}
                     {players.length < 2 && (
                         <Typography variant="body2" sx={{ opacity: 0.85 }}>
                             Waiting for another player to join…
