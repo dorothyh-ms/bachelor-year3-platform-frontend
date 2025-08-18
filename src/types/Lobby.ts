@@ -1,4 +1,3 @@
-// src/types/Lobby.ts
 export type PlayerSlimDto = {
     playerId: string;
     username: string;
@@ -6,7 +5,7 @@ export type PlayerSlimDto = {
 
 export type GameDto = {
     id: string;
-    name: string;              // your frontend uses game.name
+    name: string;
     genre: string;
     difficultyLevel: string;
     price: number;
@@ -17,23 +16,24 @@ export type GameDto = {
 
 export type Lobby = {
     id: string;
-
-    // Game
     game: GameDto;
 
-    // Creator / initiating player (support both names so either API payload works)
+    // Either name depending on backend
     createdBy?: PlayerSlimDto;
     initiatingPlayer?: PlayerSlimDto;
 
-    // Optional second player
+    initiatingPlayerActive?: boolean;
+
+    // Nullable when there is no second player
     joinedPlayer?: PlayerSlimDto | null;
 
     // Dates (support both names)
     createdDate?: string;
     dateCreated?: string;
 
+    // Some payloads send "lobbyStatus", old ones "status"
+    lobbyStatus?: string;
     status?: string;
 
-    // When a match URL is available
     matchURL?: string | null;
 };

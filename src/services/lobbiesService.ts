@@ -1,3 +1,4 @@
+// src/services/lobbiesService.ts
 import axiosApi from "./axios";
 import { Lobby } from "../types/Lobby";
 
@@ -14,6 +15,11 @@ export async function fetchLobby(lobbyId: string): Promise<Lobby> {
 
 export async function deleteLobby(lobbyId: string): Promise<void> {
     await axiosApi.delete(`/lobbies/${lobbyId}`);
+}
+
+export async function rejoinLobby(lobbyId: string): Promise<Lobby> {
+    const res = await axiosApi.post<Lobby>(`/lobbies/${lobbyId}/rejoin`);
+    return res.data;
 }
 
 export async function leaveLobby(lobbyId: string): Promise<void> {

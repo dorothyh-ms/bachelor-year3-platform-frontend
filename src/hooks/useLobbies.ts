@@ -1,10 +1,17 @@
 // src/hooks/useLobbies.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { createLobby, fetchLobbies, joinLobby, leaveLobby, fetchLobby } from "../services/lobbiesService";
+import {
+    createLobby,
+    fetchLobbies,
+    joinLobby as joinLobbyReq,
+    leaveLobby,
+    fetchLobby,
+    deleteLobby as deleteLobbyReq,
+    rejoinLobby as rejoinLobbyReq,
+} from "../services/lobbiesService";
 import { useNavigate } from "react-router-dom";
 import { Lobby } from "../types/Lobby";
 import { LOBBIES } from "../constants/routes";
-import { deleteLobby } from "../services/lobbiesService";
 
 export function useLobby(lobbyId?: string) {
     const query = useQuery({
@@ -28,11 +35,12 @@ export function useGetLobbies() {
         queryFn: fetchLobbies,
         retry: 1,
         refetchOnWindowFocus: false,
+        refetchInterval: 5000, // Poll every 5 seconds
     });
 
     return {
         isLoading: isPending,
-        isError: isError,
+        isError,
         lobbies,
     };
 }
@@ -43,7 +51,7 @@ export function useLeaveLobby() {
 
     const { mutate, isPending, isError } = useMutation({
         mutationFn: (lobbyId: string) => leaveLobby(lobbyId),
-        onSuccess: (_data, lobbyId) => {
+        onSuccess: (_data, _lobbyId) => {
             queryClient.invalidateQueries({ queryKey: ["lobbies"] });
             navigate(LOBBIES);
         },
@@ -58,7 +66,7 @@ export function useCreateLobby(customOnSuccess?: (lobbyId: string) => void) {
 
     const { mutate, isPending, isError } = useMutation({
         mutationFn: createLobby,
-        onSuccess: async (createdLobby, variables) => {
+        onSuccess: async (createdLobby, _gameId) => {
             queryClient.invalidateQueries({ queryKey: ["lobbies"] });
             if (createdLobby) {
                 navigate(`/lobbies/${createdLobby.id}`);
@@ -73,7 +81,7 @@ export function useCreateLobby(customOnSuccess?: (lobbyId: string) => void) {
 export function useDeleteLobby() {
     const queryClient = useQueryClient();
     const { mutate, isPending, isError } = useMutation({
-        mutationFn: deleteLobby,
+        mutationFn: deleteLobbyReq,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["lobbies"] });
         },
@@ -82,12 +90,27 @@ export function useDeleteLobby() {
     return { deleteLobby: mutate, isLoading: isPending, isError };
 }
 
+export function useRejoinLobby() {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
+    const { mutate, isPending, isError } = useMutation({
+        mutationFn: (lobbyId: string) => rejoinLobbyReq(lobbyId),
+        onSuccess: (_data, lobbyId) => {
+            queryClient.invalidateQueries({ queryKey: ["lobbies"] });
+            navigate(`/lobbies/${lobbyId}`);
+        },
+    });
+
+    return { rejoinLobby: mutate, isLoading: isPending, isError };
+}
+
 export function useJoinLobby() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
     const { mutate, isPending, isError } = useMutation({
-        mutationFn: (lobbyId: string) => joinLobby(lobbyId),
+        mutationFn: (lobbyId: string) => joinLobbyReq(lobbyId),
         onSuccess: (_data, lobbyId) => {
             queryClient.invalidateQueries({ queryKey: ["lobbies"] });
             queryClient.invalidateQueries({ queryKey: ["matches"] });
@@ -98,6 +121,6 @@ export function useJoinLobby() {
     return {
         isLoading: isPending,
         isError,
-        joinLobby: mutate,
+        joinLobby: mutate, // supports mutate(lobbyId, { onError, onSuccess })
     };
 }

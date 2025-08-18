@@ -20,10 +20,10 @@ import {
 } from "@mui/material";
 import { Lobby } from "../../types/Lobby";
 import SecurityContext from "../../context/SecurityContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import formatDate from "../../utils/formatDate";
-import { useJoinLobby, useDeleteLobby } from "../../hooks/useLobbies";
+import { useJoinLobby, useDeleteLobby, useRejoinLobby } from "../../hooks/useLobbies";
 import { useFetchFriends } from "../../hooks/useFriends";
 import { useSendInvite } from "../../hooks/useInvites";
 import CloseIcon from "@mui/icons-material/Close";
@@ -41,6 +41,7 @@ const LobbyCard = ({ lobby }: LobbyCardProps) => {
     const { friends } = useFetchFriends();
     const { loggedInUser } = useContext(SecurityContext);
     const { joinLobby } = useJoinLobby();
+    const { rejoinLobby } = useRejoinLobby();
     const { deleteLobby, isLoading: isDeleting } = useDeleteLobby();
 
     const handleClose = (_: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
@@ -49,11 +50,9 @@ const LobbyCard = ({ lobby }: LobbyCardProps) => {
     };
 
     const action = (
-        <>
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-                <CloseIcon fontSize="small" />
-            </IconButton>
-        </>
+        <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+            <CloseIcon fontSize="small" />
+        </IconButton>
     );
 
     const handleClickOpen = () => setOpen(true);
@@ -76,19 +75,29 @@ const LobbyCard = ({ lobby }: LobbyCardProps) => {
 
     const { sendGameInvite } = useSendInvite(handleInviteSuccess);
 
-    // ---------- Safe creator/date fallback (fixes TS18048) ----------
     const creator = lobby.createdBy ?? lobby.initiatingPlayer;
     const createdAt = lobby.createdDate ?? lobby.dateCreated;
-
     const currentUserCreatedLobby =
         !!loggedInUser?.username && !!creator?.username && loggedInUser.username === creator.username;
 
-    let description = creator
-        ? currentUserCreatedLobby
-            ? "You created this lobby "
-            : `Created by ${creator.username} `
-        : "Created ";
-    description += createdAt ? formatDate(dayjs(createdAt)) : "";
+    const description = useMemo(() => {
+        const prefix = creator ? (currentUserCreatedLobby ? "You created this lobby " : `Created by ${creator.username} `) : "Created ";
+        return prefix + (createdAt ? formatDate(dayjs(createdAt)) : "");
+    }, [creator, currentUserCreatedLobby, createdAt]);
+
+    const statusStr = (lobby.lobbyStatus ?? lobby.status) || "OPEN";
+    const isClosed = statusStr === "CLOSED";
+    const canJoin = !lobby.matchURL && !isClosed;
+
+    const onJoinError = (err: unknown) => {
+        // Backend returns 409 with { error: "..."} after our handler below
+        const msg =
+            (err as any)?.response?.data?.error ||
+            (err as any)?.message ||
+            "Could not join the lobby.";
+        setSnackBarMessage(msg);
+        setSnackBarOpen(true);
+    };
 
     return (
         <>
@@ -108,17 +117,25 @@ const LobbyCard = ({ lobby }: LobbyCardProps) => {
                     </Box>
 
                     <Box sx={{ display: "flex", gap: 2 }}>
-                        {/* Button for non-creators to join */}
-                        {!currentUserCreatedLobby && !lobby.matchURL && (
-                            <Button variant="contained" color="secondary" onClick={() => joinLobby(lobby.id)}>
+                        {/* Non-creator joins via PATCH /lobbies/{id} */}
+                        {!currentUserCreatedLobby && canJoin && (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => joinLobby(lobby.id, { onError: onJoinError })}
+                            >
                                 Join game
                             </Button>
                         )}
 
-                        {/* Button for creator to join their own lobby if not joined */}
-                        {currentUserCreatedLobby && !lobby.joinedPlayer && (
-                            <Button variant="contained" color="secondary" onClick={() => joinLobby(lobby.id)}>
-                                Join Lobby
+                        {/* Creator re-joins via POST /lobbies/{id}/rejoin */}
+                        {currentUserCreatedLobby && canJoin && (
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => rejoinLobby(lobby.id, { onError: onJoinError })}
+                            >
+                                Join game
                             </Button>
                         )}
 
@@ -135,9 +152,7 @@ const LobbyCard = ({ lobby }: LobbyCardProps) => {
                                 variant="outlined"
                                 color="error"
                                 onClick={() => {
-                                    deleteLobby(lobby.id, {
-                                        onSuccess: handleDeleteSuccess,
-                                    });
+                                    deleteLobby(lobby.id, { onSuccess: handleDeleteSuccess });
                                 }}
                                 sx={{ ml: 2 }}
                                 disabled={isDeleting}

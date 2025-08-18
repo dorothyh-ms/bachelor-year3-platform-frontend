@@ -1,3 +1,4 @@
+// src/components/LobbyCard/GameLobbyPage.tsx
 import { useParams } from "react-router-dom";
 import {
     Box,
@@ -12,7 +13,7 @@ import {
     Divider,
     Paper,
 } from "@mui/material";
-import { useEffect, useState, useContext, useCallback } from "react";
+import { useEffect, useState, useContext, useCallback, useMemo } from "react";
 import { useLobby, useLeaveLobby } from "../../hooks/useLobbies";
 import { useLobbyMessages } from "../../hooks/useLobbyMessages";
 import { LobbyMessage } from "../../types/LobbyMessage";
@@ -34,16 +35,16 @@ const GameLobbyPage = () => {
         setMessages(initialMessages);
     }, [initialMessages]);
 
-    // Always include both createdBy and joinedPlayer, avoid duplicates
+    // Build players list from lobby
     useEffect(() => {
         if (!lobby) return;
-        const playerMap: { [id: string]: PlayerSlimDto } = {};
-        if (lobby.createdBy) playerMap[lobby.createdBy.playerId] = lobby.createdBy;
-        if (lobby.joinedPlayer) playerMap[lobby.joinedPlayer.playerId] = lobby.joinedPlayer;
-        setPlayers(Object.values(playerMap));
+        const map: Record<string, PlayerSlimDto> = {};
+        if (lobby.createdBy) map[lobby.createdBy.playerId] = lobby.createdBy;
+        if (lobby.joinedPlayer) map[lobby.joinedPlayer.playerId] = lobby.joinedPlayer;
+        setPlayers(Object.values(map));
     }, [lobby]);
 
-    // Handle incoming WS messages
+    // Stable handler for incoming WS messages
     const handleChatMessage = useCallback((m: LobbyMessage) => {
         setMessages((prev) => [...prev, m]);
         if (m.type === "JOIN") {
@@ -61,11 +62,12 @@ const GameLobbyPage = () => {
     const { loggedInUser } = useContext(SecurityContext);
     const { leaveLobby } = useLeaveLobby();
 
-    const isPlayerInLobby = players.some((p) => p.playerId === loggedInUser?.playerId);
+    const isPlayerInLobby = useMemo(
+        () => players.some((p) => p.playerId === loggedInUser?.playerId),
+        [players, loggedInUser?.playerId]
+    );
 
-    if (lobbyLoading || !lobby) {
-        return <Typography sx={{ p: 2 }}>Loading...</Typography>;
-    }
+    if (lobbyLoading || !lobby) return <Typography sx={{ p: 2 }}>Loading...</Typography>;
 
     const handleSend = () => {
         const text = input.trim();
@@ -88,12 +90,7 @@ const GameLobbyPage = () => {
         >
             <Stack spacing={2}>
                 <Card>
-                    <CardMedia
-                        component="img"
-                        height="260"
-                        image={lobby.game.image}
-                        alt={lobby.game.name}
-                    />
+                    <CardMedia component="img" height="260" image={lobby.game.image} alt={lobby.game.name} />
                     <Box
                         sx={{
                             p: 2,
@@ -103,7 +100,7 @@ const GameLobbyPage = () => {
                         }}
                     >
                         <Typography variant="h5">{lobby.game.name} — Lobby</Typography>
-                        <Chip label={lobby.status ?? "OPEN"} />
+                        <Chip label={(lobby.status ?? lobby.lobbyStatus) || "OPEN"} />
                     </Box>
                 </Card>
 
@@ -162,12 +159,7 @@ const GameLobbyPage = () => {
                 </Paper>
 
                 {isPlayerInLobby && (
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        sx={{ mt: 2 }}
-                        onClick={() => leaveLobby(lobby.id)}
-                    >
+                    <Button variant="outlined" color="error" sx={{ mt: 2 }} onClick={() => leaveLobby(lobby.id)}>
                         Leave Lobby
                     </Button>
                 )}
