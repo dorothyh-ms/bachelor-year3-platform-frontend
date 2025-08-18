@@ -55,10 +55,12 @@ build_project:
 
 deploy:
   stage: deploy
-  dependencies:
-    - build_project
-  image: registry.gitlab.com/static-web-apps/azure-static-web-apps-deploy
+  dependencies: [build_project]
+  image: mcr.microsoft.com/azure-cli
   script:
-    - echo 'Finished deployment'
+    - az storage blob upload-batch --account-name "$AZURE_STORAGE_ACCOUNT" --account-key "$AZURE_STORAGE_KEY" -s dist -d '$web' --overwrite
   only:
     - main
+    - resit
+
+
