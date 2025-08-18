@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  NODE_ENV: production
+#  NODE_ENV: production
   API_TOKEN: $DEPLOYMENT_TOKEN
   APP_PATH: '$CI_PROJECT_DIR'
   OUTPUT_PATH: '$CI_PROJECT_DIR/dist'
@@ -26,16 +26,18 @@ cache:
 
 install_dependencies:
   stage: install
-  image: node:18
+  image: node:20
+  variables:
+    NPM_CONFIG_PRODUCTION: "false"   # ensure dev deps are installed
   script:
-    - npm ci
+    - npm ci --include=dev
   artifacts:
     paths:
       - node_modules/
 
 build_project:
   stage: build
-  image: node:18
+  image: node:20
   script:
     - echo "Keycloak URL $KC_URL"
     - echo "API_URL $API_URL"
