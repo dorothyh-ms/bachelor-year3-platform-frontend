@@ -1,4 +1,3 @@
-// src/hooks/useLobbyChat.ts
 import { useEffect, useRef, useState, useCallback, useContext } from "react";
 import SockJS from "sockjs-client";
 import { Client, IMessage, StompSubscription } from "@stomp/stompjs";
@@ -13,8 +12,8 @@ export function useLobbyChat(lobbyId?: string, onMessage?: OnMessage) {
     const clientRef = useRef<Client | null>(null);
     const subRef = useRef<StompSubscription | null>(null);
 
-    // Memoize the callback so it's stable
-    const stableOnMessage = useCallback(onMessage, [onMessage]);
+    // ✅ Ensure a function is always provided to useCallback
+    const stableOnMessage = useCallback(onMessage ?? (() => {}), [onMessage]);
 
     useEffect(() => {
         if (!lobbyId) return;
@@ -30,9 +29,10 @@ export function useLobbyChat(lobbyId?: string, onMessage?: OnMessage) {
                 subRef.current = client.subscribe(`/topic/lobbies/${lobbyId}`, (msg: IMessage) => {
                     try {
                         const data = JSON.parse(msg.body);
-                        if (stableOnMessage) stableOnMessage(data);
+                        // No 'if' needed; stableOnMessage is always a function
+                        stableOnMessage(data);
                     } catch {
-                        // handle error
+                        // handle error silently
                     }
                 });
             },
